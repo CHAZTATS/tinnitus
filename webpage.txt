@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Tinnitus Sound Therapy</title>
+	<link rel="manifest" href="manifest.json">
+	<meta name="apple-mobile-web-app-capable" content="yes">
+	<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+	<style>
+		* { box-sizing: border-box; }
+		body {
+			font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+			max-width: 800px;
+			margin: 0 auto;
+			padding: 20px;
+			background: #1a1a2e;
+			color: #eee;
+			line-height: 1.6;
+		}
+		h1 { color: #00d4ff; text-align: center; margin-bottom: 10px; }
+		.subtitle { text-align: center; color: #888; margin-bottom: 30px; font-size: 0.9em; }
+		.warning {
+			background: #ff6b6b22;
+			border: 1px solid #ff6b6b;
+			border-radius: 8px;
+			padding: 15px;
+			margin-bottom: 20px;
+			font-size: 0.9em;
+		}
+		.panel {
+			background: #16213e;
+			border-radius: 12px;
+			padding: 20px;
+			margin-bottom: 20px;
+		}
+		.panel h2 {
+			margin-top: 0;
+			color: #00d4ff;
+			font-size: 1.2em;
+			border-bottom: 1px solid #333;
+			padding-bottom: 10px;
+		}
+		.form-group { margin-bottom: 15px; }
+		label { display: block; margin-bottom: 5px; color: #aaa; }
+		select, input[type="range"] {
+			width: 100%;
+			padding: 10px;
+			border: 1px solid #333;
+			border-radius: 6px;
+			background: #0f0f23;
+			color: #fff;
+			font-size: 1em;
+		}
+		input[type="range"] { padding: 0; height: 8px; cursor: pointer; }
+		.range-value { text-align: right; color: #00d4ff; font-weight: bold; }
+		.btn {
+			padding: 15px 30px;
+			border: none;
+			border-radius: 8px;
+			font-size: 1.1em;
+			cursor: pointer;
+			transition: all 0.2s;
+			margin: 5px;
+		}
+		.btn-primary { background: #00d4ff; color: #000; }
+		.btn-primary:hover { background: #00a8cc; }
+		.btn-danger { background: #ff6b6b; color: #fff; }
+		.btn-danger:hover { background: #ee5a5a; }
+		.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+		.controls { text-align: center; margin: 20px 0; }
+		.status { text-align: center; padding: 15px; border-radius: 8px; margin: 20px 0; }
+		.status.playing { background: #00d4ff22; border: 1px solid #00d4ff; }
+		.status.stopped { background: #33333366; border: 1px solid #555; }
+		.timer { font-size: 2em; font-weight: bold; color: #00d4ff; }
+		.freq-buttons { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
+		.freq-btn {
+			padding: 10px;
+			border: 2px solid #333;
+			border-radius: 6px;
+			background: #0f0f23;
+			color: #fff;
+			cursor: pointer;
+			transition: all 0.2s;
+		}
+		.freq-btn:hover { border-color: #00d4ff; }
+		.freq-btn.selected { border-color: #00d4ff; background: #00d4ff22; }
+		.info { font-size: 0.85em; color: #888; margin-top: 5px; }
+		.visualizer { width: 100%; height: 60px; background: #0f0f23; border-radius: 8px; margin: 15px 0; }
+	</style>
+</head>
+<body>
+	<h1>Tinnitus Sound Therapy</h1>
+	<p class="subtitle">Based on cross-frequency de-correlating stimulus modulation<br>
+	<small><a href="https://doi.org/10.1016/j.heares.2025.109335" target="_blank" style="color:#888;text-decoration:underline;">Yukhnovich et al., Hearing Research 2025</a></small></p>
+
+	<div class="panel">
+		<div class="warning" style="margin-bottom:15px;">
+			<strong>Important:</strong> This is an experimental tool based on published research.
+			Consult a healthcare professional before use.
+		</div>
+		<ul style="margin:0;padding-left:20px;">
+			<li>Start low and increase gradually. The sound should be comfortable, not loud</li>
+			<li>Listen daily for approximately 60 minutes</li>
+			<li>You can listen while doing other activities</li>
+			<li>Use headphones for best results</li>
+			<li>The study showed significant improvement after 6 weeks of daily listening</li>
+			<li>Effects may persist for weeks after stopping</li>
+		</ul>
+	</div>
+
+	<div class="panel">
+		<h2>1. Tinnitus Frequency</h2>
+		<p class="info">Select the frequency closest to your tinnitus pitch. Click to preview each tone.</p>
+		<div class="freq-buttons" id="freqButtons"></div>
+		<p class="info" style="margin-top: 15px;">Selected: <span id="selectedFreq">8 kHz</span></p>
+	</div>
+
+	<div class="panel">
+		<h2>2. Hearing Profile</h2>
+		<div class="form-group">
+			<label>High-frequency hearing correction:</label>
+			<select id="hearingProfile">
+				<option value="0">Normal hearing</option>
+				<option value="15">Mild hearing loss</option>
+				<option value="30" selected>Moderate hearing loss</option>
+				<option value="45">Severe hearing loss</option>
+			</select>
+		</div>
+		<p class="info">If high frequencies sound quieter than low frequencies, select a hearing loss option.</p>
+	</div>
+
+	<div class="panel">
+		<h2>3. Modulation Type</h2>
+		<div class="form-group">
+			<select id="modType">
+				<option value="amp" selected>Amplitude modulation (recommended)</option>
+				<option value="phase">Phase modulation</option>
+			</select>
+		</div>
+		<p class="info">Both types showed similar efficacy in the study.</p>
+	</div>
+
+	<div class="panel">
+		<h2>4. Balance (L/R)</h2>
+		<div class="form-group">
+			<input type="range" id="pan" min="-100" max="100" value="0">
+			<div class="range-value"><span id="panValue">0</span> <span id="panLabel">(center)</span></div>
+		</div>
+		<p class="info">Adjust if your tinnitus is stronger on one side.</p>
+	</div>
+
+	<div class="panel">
+		<h2>5. Volume</h2>
+		<div class="form-group">
+			<input type="range" id="volume" min="0" max="100" value="30">
+			<div class="range-value"><span id="volumeValue">30</span>%</div>
+		</div>
+		<p class="info">Start low and increase gradually. The sound should be comfortable, not loud.</p>
+	</div>
+
+	<div class="controls">
+		<button class="btn btn-primary" id="playBtn" onclick="togglePlay()">Start Therapy</button>
+		<button class="btn btn-danger" id="stopBtn" onclick="stopPlay()" disabled>Stop</button>
+	</div>
+
+	<canvas class="visualizer" id="visualizer"></canvas>
+
+	<div class="status stopped" id="status">
+		<div class="timer" id="timer">00:00:00</div>
+		<div id="statusText">Ready to start</div>
+	</div>
+
+	<div class="panel" id="historyPanel">
+		<h2>Session History</h2>
+		<div id="historyContent">No sessions recorded yet.</div>
+	</div>
+
+	<script>
+class TinnitusTherapyGenerator {
+	constructor() {
+		this.audioContext = null
+		this.masterGain = null
+		this.pannerNode = null
+		this.isPlaying = false
+		this.startTime = 0
+		this.timerInterval = null
+		this.analyser = null
+		this.animationId = null
+
+		// Parameters from the study (Generate_Full_Experiment_Stimuli.m)
+		this.sampleRate = 44100
+		this.stimulusDuration = 4 // seconds
+		this.rampProportion = 0.25 // 25% of duration = 1 second ramp
+		this.f0Range = [96, 256] // Hz
+		this.tmr = 1 // temporal modulation rate (Hz)
+		this.smrRange = [1.5, 7.5] // spectral modulation rate (cycles/octave)
+		this.smrCycleDuration = 8 // seconds (scyc parameter)
+		this.depth = 1 // modulation depth
+		this.loud = 0.1 // loudness scaling factor
+
+		// Frequency bands: extended to support lower frequencies (experimental)
+		// Standard: 1000 * 2^(0:0.5:4) = [1000, 1414, 2000, 2828, 4000, 5657, 8000, 11314, 16000]
+		// Extended: adds [250, 354, 500, 707] below 1000Hz
+		const fb = []
+		for (let i = -4; i <= 8; i++) {
+			fb.push(1000 * Math.pow(2, i * 0.5))
+		}
+		// 12 bands of half-octave each (4 experimental low + 8 standard)
+		this.fbands = []
+		for (let i = 0; i < 12; i++) {
+			this.fbands.push([fb[i], fb[i + 1]])
+		}
+		this.standardBandOffset = 4 // first 4 bands are experimental
+
+		// Hearing correction template per band
+		// Extended with zeros for low frequencies (no correction needed below 1kHz)
+		// Standard correction starts at 2kHz, reaches max at 8kHz, flat above
+		this.hlCorrTemplate = [0, 0, 0, 0, 0, 0, 0, 0.125, 0.25, 0.375, 0.5, 0.5]
+
+		// Current settings
+		this.tinnitusFreq = 8000
+		this.hearingCorrectionMax = 30 // dB
+		this.modType = 'amp'
+		this.volume = 0.3
+		this.pan = 0
+
+		this.nextScheduleTime = 0
+		this.schedulerTimer = null
+	}
+
+	init() {
+		if (!this.audioContext) {
+			this.audioContext = new (window.AudioContext || window.webkitAudioContext)({
+				sampleRate: this.sampleRate
+			})
+			this.masterGain = this.audioContext.createGain()
+			this.pannerNode = this.audioContext.createStereoPanner()
+			this.masterGain.connect(this.pannerNode)
+			this.pannerNode.connect(this.audioContext.destination)
+			this.analyser = this.audioContext.createAnalyser()
+			this.analyser.fftSize = 256
+			this.pannerNode.connect(this.analyser)
+		}
+		if (this.audioContext.state === 'suspended') {
+			this.audioContext.resume()
+		}
+		this.initMediaSession()
+	}
+
+	initMediaSession() {
+		if (!('mediaSession' in navigator)) return
+		navigator.mediaSession.metadata = new MediaMetadata({
+			title: 'Tinnitus Sound Therapy',
+			artist: 'Therapy Session',
+			album: 'Sound Therapy'
+		})
+		navigator.mediaSession.setActionHandler('play', () => { if (!this.isPlaying) togglePlay() })
+		navigator.mediaSession.setActionHandler('pause', () => { if (this.isPlaying) stopPlay() })
+		navigator.mediaSession.setActionHandler('stop', () => { if (this.isPlaying) stopPlay() })
+	}
+
+	// Find which band pair (2 consecutive bands = 1 octave) to modulate
+	getModulationBandIndex(tinnitusFreq) {
+		// Match logic from Table 1 in paper
+		// Find the band pair that best centers on tinnitus frequency
+		let bestIndex = this.standardBandOffset + 5 // default to 8-16kHz region
+		let minDist = Infinity
+
+		const numBands = this.fbands.length
+		for (let b = 0; b < numBands - 1; b++) {
+			// Band pair spans fbands[b] and fbands[b+1]
+			const lowFreq = this.fbands[b][0]
+			const highFreq = this.fbands[b + 1][1]
+			const center = Math.sqrt(lowFreq * highFreq)
+			const dist = Math.abs(Math.log2(tinnitusFreq / center))
+			if (dist < minDist) {
+				minDist = dist
+				bestIndex = b
+			}
+		}
+		return bestIndex
+	}
+
+	generateStimulus() {
+		const duration = this.stimulusDuration
+		const numSamples = Math.floor(duration * this.sampleRate)
+		const rampDuration = duration * this.rampProportion
+
+		// Random fundamental frequency
+		const f0 = Math.round(this.f0Range[0] + Math.random() * (this.f0Range[1] - this.f0Range[0]))
+
+		// Get modulation band pair index
+		const modBandIndex = this.getModulationBandIndex(this.tinnitusFreq)
+		// Modulation applies to bands modBandIndex and modBandIndex+1
+		const modBandIndices = [modBandIndex, modBandIndex + 1]
+
+		// Random phase offsets for modulation
+		const phaseOff = Math.random() * 2 * Math.PI
+		const phaseS = Math.random() * 2 * Math.PI
+
+		// Calculate hearing correction per band (dB)
+		const fbandDb = this.hlCorrTemplate.map(t => t * this.hearingCorrectionMax)
+
+		// Collect all harmonics with their properties
+		// Minimum frequency depends on whether we're using experimental low bands
+		const minFreq = modBandIndices.some(i => i < this.standardBandOffset) ? 250 : 1000
+		const harmonics = []
+		for (let bandIdx = 0; bandIdx < this.fbands.length; bandIdx++) {
+			const frange = this.fbands[bandIdx]
+			// Harmonics in this band: ceil(fmin/f0) to floor((fmax-1)/f0)
+			const nMin = Math.ceil(frange[0] / f0)
+			const nMax = Math.floor((frange[1] - 1) / f0)
+
+			for (let n = nMin; n <= nMax; n++) {
+				const freq = n * f0
+				if (freq >= minFreq && freq < 16000) {
+					harmonics.push({
+						n: n,
+						freq: freq,
+						bandIdx: bandIdx,
+						isModulated: modBandIndices.includes(bandIdx),
+						intensity: Math.pow(10, fbandDb[bandIdx] / 20)
+					})
+				}
+			}
+		}
+
+		// Get modulated harmonics for calculating octave distance
+		const modulatedHarmonics = harmonics.filter(h => h.isModulated)
+		if (modulatedHarmonics.length === 0) {
+			// Fallback if no harmonics in mod band
+			return this.generateFallbackBuffer(numSamples)
+		}
+
+		const modulatedFreqs = modulatedHarmonics.map(h => h.freq)
+		const minModFreq = Math.min(...modulatedFreqs)
+
+		// Calculate log-scaled, mean-centered octave distances
+		const logDistances = modulatedFreqs.map(f => Math.log2(f / minModFreq))
+		const meanLogDist = logDistances.reduce((a, b) => a + b, 0) / logDistances.length
+		const centeredDistances = logDistances.map(d => d - meanLogDist)
+
+		// Create a map from freq to centered distance
+		const freqToDistance = {}
+		modulatedFreqs.forEach((f, i) => {
+			freqToDistance[f] = centeredDistances[i]
+		})
+
+		// SMR parameters
+		const smrMean = (this.smrRange[0] + this.smrRange[1]) / 2
+		const smrAmplitude = (this.smrRange[1] - this.smrRange[0]) / 2
+
+		// Generate audio buffer
+		const buffer = this.audioContext.createBuffer(1, numSamples, this.sampleRate)
+		const data = buffer.getChannelData(0)
+
+		// Generate each harmonic (rand_phase = 0, so all harmonics start at sine phase)
+		for (const harmonic of harmonics) {
+			const freq = harmonic.freq
+			const intensity = harmonic.intensity
+
+			for (let i = 0; i < numSamples; i++) {
+				const t = (i + 1) / this.sampleRate // Matlab uses 1/srate:1/srate:dur
+
+				let sample
+
+				if (harmonic.isModulated) {
+					// Time-varying spectral modulation rate
+					const smr = smrMean + smrAmplitude * Math.sin(phaseS + 2 * Math.PI * t / this.smrCycleDuration)
+
+					// Octave distance for this harmonic
+					const fDist = freqToDistance[freq]
+
+					// Modulation phase
+					const modPhase = 2 * Math.PI * (phaseOff + this.tmr * t + smr * fDist)
+
+					if (this.modType === 'amp') {
+						// Amplitude modulation: mmat = 1 + depth * sin(modPhase)
+						const modValue = 1 + this.depth * Math.sin(modPhase)
+						sample = modValue * Math.sin(2 * Math.PI * freq * t) * intensity
+					} else {
+						// Phase modulation: mmat = pi * (1 + depth * sin(modPhase)) / 2
+						const phaseShift = Math.PI * (1 + this.depth * Math.sin(modPhase)) / 2
+						sample = Math.sin(2 * Math.PI * freq * t + phaseShift) * intensity
+					}
+				} else {
+					// No modulation
+					sample = Math.sin(2 * Math.PI * freq * t) * intensity
+				}
+
+				data[i] += sample
+			}
+		}
+
+		// Calculate RMS and scale
+		let sumSq = 0
+		for (let i = 0; i < numSamples; i++) {
+			sumSq += data[i] * data[i]
+		}
+		const rms = Math.sqrt(sumSq / numSamples)
+		const scale = this.loud / (10 * rms)
+
+		for (let i = 0; i < numSamples; i++) {
+			data[i] *= scale
+		}
+
+		// Apply raised cosine ramp (wind_ramp function)
+		const rampSamples = Math.round(2 * rampDuration * this.sampleRate)
+		const halfRamp = Math.round(rampSamples / 2)
+
+		for (let i = 0; i < halfRamp; i++) {
+			// w = linspace(-pi/2, 1.5*pi, wds) -> w = (sin(w)+1)/2
+			const w = -Math.PI / 2 + (2 * Math.PI) * (i / (rampSamples - 1))
+			const rampValue = (Math.sin(w) + 1) / 2
+			data[i] *= rampValue
+		}
+
+		for (let i = 0; i < halfRamp; i++) {
+			const idx = numSamples - halfRamp + i
+			const wIdx = halfRamp + i
+			const w = -Math.PI / 2 + (2 * Math.PI) * (wIdx / (rampSamples - 1))
+			const rampValue = (Math.sin(w) + 1) / 2
+			if (idx < numSamples) {
+				data[idx] *= rampValue
+			}
+		}
+
+		// Prevent clipping
+		let maxAbs = 0
+		for (let i = 0; i < numSamples; i++) {
+			maxAbs = Math.max(maxAbs, Math.abs(data[i]))
+		}
+		if (maxAbs > 1) {
+			for (let i = 0; i < numSamples; i++) {
+				data[i] /= maxAbs
+			}
+		}
+
+		return buffer
+	}
+
+	generateFallbackBuffer(numSamples) {
+		const buffer = this.audioContext.createBuffer(1, numSamples, this.sampleRate)
+		const data = buffer.getChannelData(0)
+		// Generate simple noise as fallback
+		for (let i = 0; i < numSamples; i++) {
+			data[i] = (Math.random() * 2 - 1) * 0.1
+		}
+		return buffer
+	}
+
+	scheduleNextStimulus() {
+		if (!this.isPlaying) return
+
+		const buffer = this.generateStimulus()
+		const source = this.audioContext.createBufferSource()
+		source.buffer = buffer
+		source.connect(this.masterGain)
+
+		const currentTime = this.audioContext.currentTime
+		const startTime = Math.max(currentTime, this.nextScheduleTime)
+
+		source.start(startTime)
+		this.nextScheduleTime = startTime + this.stimulusDuration
+
+		// Schedule next stimulus before current one ends
+		const scheduleAhead = (this.stimulusDuration - 0.5) * 1000
+		this.schedulerTimer = setTimeout(() => this.scheduleNextStimulus(), scheduleAhead)
+	}
+
+	start() {
+		this.init()
+		this.isPlaying = true
+		this.startTime = Date.now()
+		this.nextScheduleTime = this.audioContext.currentTime
+
+		this.masterGain.gain.setValueAtTime(this.volume, this.audioContext.currentTime)
+		this.pannerNode.pan.setValueAtTime(this.pan, this.audioContext.currentTime)
+
+		this.scheduleNextStimulus()
+		this.startTimer()
+		this.startVisualizer()
+	}
+
+	stop() {
+		this.isPlaying = false
+
+		if (this.schedulerTimer) {
+			clearTimeout(this.schedulerTimer)
+			this.schedulerTimer = null
+		}
+
+		if (this.masterGain) {
+			this.masterGain.gain.setValueAtTime(0, this.audioContext.currentTime)
+		}
+
+		this.stopTimer()
+		this.stopVisualizer()
+	}
+
+	setVolume(value) {
+		this.volume = value
+		if (this.masterGain && this.isPlaying) {
+			this.masterGain.gain.setValueAtTime(value, this.audioContext.currentTime)
+		}
+	}
+
+	setPan(value) {
+		this.pan = value
+		if (this.pannerNode) {
+			this.pannerNode.pan.setValueAtTime(value, this.audioContext.currentTime)
+		}
+	}
+
+	startTimer() {
+		this.timerInterval = setInterval(() => {
+			const elapsed = Math.floor((Date.now() - this.startTime) / 1000)
+			const hours = Math.floor(elapsed / 3600)
+			const minutes = Math.floor((elapsed % 3600) / 60)
+			const seconds = elapsed % 60
+			document.getElementById('timer').textContent =
+				`${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`
+		}, 1000)
+	}
+
+	stopTimer() {
+		if (this.timerInterval) {
+			clearInterval(this.timerInterval)
+			this.timerInterval = null
+		}
+	}
+
+	startVisualizer() {
+		const canvas = document.getElementById('visualizer')
+		const ctx = canvas.getContext('2d')
+		const bufferLength = this.analyser.frequencyBinCount
+		const dataArray = new Uint8Array(bufferLength)
+
+		const draw = () => {
+			if (!this.isPlaying) return
+			this.animationId = requestAnimationFrame(draw)
+			this.analyser.getByteFrequencyData(dataArray)
+
+			ctx.fillStyle = '#0f0f23'
+			ctx.fillRect(0, 0, canvas.width, canvas.height)
+
+			const barWidth = (canvas.width / bufferLength) * 2.5
+			let x = 0
+
+			for (let i = 0; i < bufferLength; i++) {
+				const barHeight = (dataArray[i] / 255) * canvas.height
+				const hue = 180 + (i / bufferLength) * 60
+				ctx.fillStyle = `hsl(${hue}, 80%, 50%)`
+				ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight)
+				x += barWidth + 1
+			}
+		}
+		draw()
+	}
+
+	stopVisualizer() {
+		if (this.animationId) {
+			cancelAnimationFrame(this.animationId)
+			this.animationId = null
+		}
+		const canvas = document.getElementById('visualizer')
+		const ctx = canvas.getContext('2d')
+		ctx.fillStyle = '#0f0f23'
+		ctx.fillRect(0, 0, canvas.width, canvas.height)
+	}
+
+	previewTone(freq, duration = 0.5) {
+		this.init()
+		const numSamples = Math.floor(duration * this.sampleRate)
+		const buffer = this.audioContext.createBuffer(1, numSamples, this.sampleRate)
+		const data = buffer.getChannelData(0)
+
+		for (let i = 0; i < numSamples; i++) {
+			const t = i / this.sampleRate
+			data[i] = 0.2 * Math.sin(2 * Math.PI * freq * t)
+		}
+
+		const rampSamples = Math.floor(0.05 * this.sampleRate)
+		for (let i = 0; i < rampSamples; i++) {
+			const rampValue = 0.5 * (1 - Math.cos(Math.PI * i / rampSamples))
+			data[i] *= rampValue
+			data[numSamples - 1 - i] *= rampValue
+		}
+
+		const source = this.audioContext.createBufferSource()
+		source.buffer = buffer
+		const gain = this.audioContext.createGain()
+		gain.gain.setValueAtTime(this.volume, this.audioContext.currentTime)
+		source.connect(gain)
+		gain.connect(this.audioContext.destination)
+		source.start()
+	}
+}
+
+class SessionTracker {
+	storageKey = 'tinnitus-sessions'
+	currentSessionStart = null
+
+	getSessions() {
+		const data = localStorage.getItem(this.storageKey)
+		return data ? JSON.parse(data) : []
+	}
+
+	saveSessions(sessions) {
+		localStorage.setItem(this.storageKey, JSON.stringify(sessions))
+	}
+
+	startSession() {
+		this.currentSessionStart = Date.now()
+	}
+
+	endSession() {
+		if (!this.currentSessionStart) return
+
+		const end = Date.now()
+		const durationMs = end - this.currentSessionStart
+		const durationMinutes = durationMs / 60000
+
+		if (durationMinutes >= 1) {
+			const sessions = this.getSessions()
+			sessions.push({
+				start: this.currentSessionStart,
+				end: end,
+				duration: durationMs
+			})
+			this.saveSessions(sessions)
+		}
+
+		this.currentSessionStart = null
+		this.renderHistory()
+	}
+
+	getSessionsByDay() {
+		const sessions = this.getSessions()
+		const byDay = {}
+
+		for (const session of sessions) {
+			const date = new Date(session.start).toLocaleDateString('fr-FR', {
+				weekday: 'short',
+				day: 'numeric',
+				month: 'short'
+			})
+			if (!byDay[date]) byDay[date] = 0
+			byDay[date] += session.duration
+		}
+
+		return byDay
+	}
+
+	formatDuration(ms) {
+		const totalSeconds = Math.floor(ms / 1000)
+		const hours = Math.floor(totalSeconds / 3600)
+		const minutes = Math.floor((totalSeconds % 3600) / 60)
+		if (hours > 0) return `${hours}h ${minutes}min`
+		return `${minutes} min`
+	}
+
+	renderHistory() {
+		const container = document.getElementById('historyContent')
+		const byDay = this.getSessionsByDay()
+		const days = Object.keys(byDay)
+
+		if (days.length === 0) {
+			container.textContent = 'No sessions recorded yet.'
+			return
+		}
+
+		const rows = days.map(day =>
+			`<div style="display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #333;">
+				<span>${day}</span>
+				<span style="color:#00d4ff;font-weight:bold;">${this.formatDuration(byDay[day])}</span>
+			</div>`
+		).join('')
+
+		const totalMs = Object.values(byDay).reduce((a, b) => a + b, 0)
+		container.innerHTML = rows +
+			`<div style="display:flex;justify-content:space-between;padding:12px 0;margin-top:8px;font-weight:bold;">
+				<span>Total (${days.length} days)</span>
+				<span style="color:#00d4ff;">${this.formatDuration(totalMs)}</span>
+			</div>`
+	}
+}
+
+// Settings persistence
+const SETTINGS_KEY = 'tinnitus-settings'
+
+function loadSettings() {
+	const data = localStorage.getItem(SETTINGS_KEY)
+	return data ? JSON.parse(data) : { freqIndex: 12, volume: 30, hearingProfile: '30', modType: 'amp', pan: 0 }
+}
+
+function saveSettings(settings) {
+	localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings))
+}
+
+function updateSetting(key, value) {
+	const settings = loadSettings()
+	settings[key] = value
+	saveSettings(settings)
+}
+
+// Initialize generator and tracker
+const generator = new TinnitusTherapyGenerator()
+const sessionTracker = new SessionTracker()
+sessionTracker.renderHistory()
+
+// Load saved settings
+const savedSettings = loadSettings()
+
+// Frequency options from the study (17 frequencies in 1/4 octave steps)
+const frequencies = [1000, 1200, 1400, 1700, 2000, 2400, 2800, 3400, 4000, 4800, 5700, 6700, 8000, 9500, 11000, 13000, 16000]
+let selectedFreqIndex = savedSettings.freqIndex
+
+// Custom frequency override via URL parameter (?freq=580)
+const urlParams = new URLSearchParams(window.location.search)
+const customFreqParam = urlParams.get('freq')
+let customFreq = null
+if (customFreqParam) {
+	const parsed = parseInt(customFreqParam)
+	if (parsed >= 100 && parsed <= 20000) {
+		customFreq = parsed
+		generator.tinnitusFreq = customFreq
+	}
+}
+
+// Create frequency buttons
+const freqButtonsContainer = document.getElementById('freqButtons')
+frequencies.forEach((freq, index) => {
+	const btn = document.createElement('button')
+	btn.className = 'freq-btn' + (index === selectedFreqIndex ? ' selected' : '')
+	btn.textContent = freq >= 1000 ? (freq / 1000).toFixed(1).replace('.0', '') + ' kHz' : freq + ' Hz'
+	btn.onclick = () => selectFrequency(index)
+	freqButtonsContainer.appendChild(btn)
+})
+
+function formatFreq(freq) {
+	return freq >= 1000 ? (freq / 1000).toFixed(1).replace('.0', '') + ' kHz' : freq + ' Hz'
+}
+
+function selectFrequency(index, preview = true) {
+	selectedFreqIndex = index
+	if (!customFreq) {
+		generator.tinnitusFreq = frequencies[index]
+	}
+	updateSetting('freqIndex', index)
+
+	document.querySelectorAll('.freq-btn').forEach((btn, i) => {
+		btn.classList.toggle('selected', i === index)
+	})
+
+	updateFrequencyDisplay()
+	if (preview && !customFreq) generator.previewTone(frequencies[index])
+}
+
+function updateFrequencyDisplay() {
+	const displayEl = document.getElementById('selectedFreq')
+	if (customFreq) {
+		const isExperimental = customFreq < 1000
+		displayEl.innerHTML = `<span style="color:#ff9800;">${formatFreq(customFreq)} (URL override${isExperimental ? ' - experimental' : ''})</span>`
+	} else {
+		displayEl.textContent = formatFreq(frequencies[selectedFreqIndex])
+	}
+}
+
+// Pan control
+const panSlider = document.getElementById('pan')
+const panValue = document.getElementById('panValue')
+const panLabel = document.getElementById('panLabel')
+panSlider.oninput = () => {
+	const value = parseInt(panSlider.value)
+	panValue.textContent = value
+	panLabel.textContent = value < 0 ? '(left)' : value > 0 ? '(right)' : '(center)'
+	generator.setPan(value / 100)
+	updateSetting('pan', value)
+}
+
+// Volume control
+const volumeSlider = document.getElementById('volume')
+const volumeValue = document.getElementById('volumeValue')
+volumeSlider.oninput = () => {
+	const value = volumeSlider.value
+	volumeValue.textContent = value
+	generator.setVolume(value / 100)
+	updateSetting('volume', parseInt(value))
+}
+
+// Hearing profile
+document.getElementById('hearingProfile').onchange = (e) => {
+	generator.hearingCorrectionMax = parseInt(e.target.value)
+	updateSetting('hearingProfile', e.target.value)
+}
+
+// Modulation type
+document.getElementById('modType').onchange = (e) => {
+	generator.modType = e.target.value
+	updateSetting('modType', e.target.value)
+}
+
+// Apply saved settings to UI
+selectFrequency(savedSettings.freqIndex, false)
+updateFrequencyDisplay()
+panSlider.value = savedSettings.pan || 0
+panValue.textContent = savedSettings.pan || 0
+panLabel.textContent = (savedSettings.pan || 0) < 0 ? '(left)' : (savedSettings.pan || 0) > 0 ? '(right)' : '(center)'
+generator.pan = (savedSettings.pan || 0) / 100
+volumeSlider.value = savedSettings.volume
+volumeValue.textContent = savedSettings.volume
+generator.setVolume(savedSettings.volume / 100)
+document.getElementById('hearingProfile').value = savedSettings.hearingProfile
+generator.hearingCorrectionMax = parseInt(savedSettings.hearingProfile)
+document.getElementById('modType').value = savedSettings.modType
+generator.modType = savedSettings.modType
+
+// Play controls
+function togglePlay() {
+	const playBtn = document.getElementById('playBtn')
+	const stopBtn = document.getElementById('stopBtn')
+	const status = document.getElementById('status')
+	const statusText = document.getElementById('statusText')
+
+	generator.hearingCorrectionMax = parseInt(document.getElementById('hearingProfile').value)
+	generator.modType = document.getElementById('modType').value
+	generator.setVolume(volumeSlider.value / 100)
+	generator.setPan(panSlider.value / 100)
+
+	generator.start()
+	sessionTracker.startSession()
+
+	playBtn.disabled = true
+	stopBtn.disabled = false
+	status.className = 'status playing'
+	statusText.textContent = 'Therapy in progress...'
+}
+
+function stopPlay() {
+	const playBtn = document.getElementById('playBtn')
+	const stopBtn = document.getElementById('stopBtn')
+	const status = document.getElementById('status')
+	const statusText = document.getElementById('statusText')
+
+	generator.stop()
+	sessionTracker.endSession()
+
+	playBtn.disabled = false
+	stopBtn.disabled = true
+	status.className = 'status stopped'
+	statusText.textContent = 'Stopped'
+}
+
+// Resize canvas
+function resizeCanvas() {
+	const canvas = document.getElementById('visualizer')
+	canvas.width = canvas.offsetWidth
+	canvas.height = canvas.offsetHeight
+}
+window.addEventListener('resize', resizeCanvas)
+resizeCanvas()
+
+// Save session on page unload
+window.addEventListener('beforeunload', () => {
+	if (sessionTracker.currentSessionStart) {
+		sessionTracker.endSession()
+	}
+})
+	</script>
+</body>
+</html>

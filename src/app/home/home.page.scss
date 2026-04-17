@@ -1,27 +1,261 @@
-#container {
+:host {
+  --bg-base: #06111f;
+  --bg-panel: #11243d;
+  --bg-soft: #0f1b2d;
+  --text-main: #e7edf7;
+  --text-dim: #9fb2cc;
+  --accent: #34d5ff;
+  --accent-2: #4ee6a8;
+  --danger: #ff6b7b;
+}
+
+.app-header ion-toolbar {
+  --background: linear-gradient(110deg, #0b1f36, #0d2947);
+  --color: var(--text-main);
+}
+
+.therapy-content {
+  --background: radial-gradient(circle at 20% 10%, #13335a 0%, var(--bg-base) 55%);
+  color: var(--text-main);
+}
+
+.hero {
+  padding: 20px 16px 8px;
   text-align: center;
-
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
 }
 
-#container strong {
-  font-size: 20px;
-  line-height: 26px;
+.hero h1 {
+  margin: 8px 0;
+  font-size: 1.6rem;
+  line-height: 1.2;
 }
 
-#container p {
-  font-size: 16px;
-  line-height: 22px;
+.hero p {
+  margin: 0;
+  color: var(--text-dim);
+}
 
-  color: #8c8c8c;
+.hero a {
+  display: inline-block;
+  margin-top: 8px;
+  color: var(--accent);
+  font-size: 0.9rem;
+}
 
+.panel {
+  margin: 12px;
+  border-radius: 16px;
+  background: linear-gradient(170deg, var(--bg-panel), var(--bg-soft));
+  border: 1px solid #224266;
+  box-shadow: 0 10px 24px rgb(0 0 0 / 22%);
+}
+
+.panel ion-card-title {
+  color: var(--accent);
+}
+
+.warning-panel {
+  border-color: #914555;
+  background: linear-gradient(170deg, #3a1d2a, #2a1520);
+}
+
+.warning-title {
+  color: #ff9aa8;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 6px;
+}
+
+ul {
+  margin: 10px 0 0;
+  padding-left: 18px;
+}
+
+li {
+  margin-bottom: 6px;
+}
+
+.info {
+  color: var(--text-dim);
+  margin-top: 10px;
+  margin-bottom: 0;
+  font-size: 0.9rem;
+}
+
+.freq-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+  margin-top: 14px;
+}
+
+.freq-btn {
+  appearance: none;
+  border: 1px solid #30537d;
+  border-radius: 10px;
+  background: #0a1a30;
+  color: var(--text-main);
+  padding: 10px 6px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  transition:
+    border-color 120ms ease,
+    transform 120ms ease,
+    background-color 120ms ease;
+}
+
+.freq-btn:active {
+  transform: scale(0.98);
+}
+
+.freq-btn.selected {
+  border-color: var(--accent);
+  background: rgb(52 213 255 / 18%);
+}
+
+.selected-label {
+  margin-top: 12px;
+  color: var(--text-dim);
+}
+
+.selected-label span {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.control-item {
+  --background: transparent;
+  --inner-padding-end: 0;
+  --padding-start: 0;
+  --color: var(--text-main);
+}
+
+ion-range {
+  --bar-background: #2b4a72;
+  --bar-background-active: linear-gradient(90deg, var(--accent), var(--accent-2));
+  --knob-background: #fff;
+  --pin-background: var(--accent);
+  --pin-color: #072039;
+}
+
+.value-row {
+  text-align: right;
+  color: var(--accent);
+  font-weight: 700;
   margin: 0;
 }
 
-#container a {
-  text-decoration: none;
+.controls {
+  padding: 8px 12px;
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.controls ion-button {
+  min-width: 140px;
+  font-weight: 700;
+}
+
+.visualizer {
+  width: calc(100% - 24px);
+  margin: 8px 12px 12px;
+  height: 64px;
+  background: #111827;
+  border-radius: 12px;
+  border: 1px solid #2b415f;
+}
+
+.status {
+  margin: 0 12px 12px;
+  padding: 14px;
+  border-radius: 14px;
+  text-align: center;
+  border: 1px solid #2e4e76;
+  background: rgb(16 29 48 / 85%);
+}
+
+.status.playing {
+  border-color: var(--accent);
+  background: rgb(52 213 255 / 14%);
+}
+
+.timer {
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: var(--accent);
+}
+
+.empty-history {
+  color: var(--text-dim);
+}
+
+.history-list {
+  background: transparent;
+}
+
+.history-list ion-item {
+  --background: transparent;
+  --color: var(--text-main);
+}
+
+.history-duration {
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.total-row {
+  margin-top: 4px;
+}
+
+.notes p {
+  margin: 0;
+  color: var(--text-dim);
+}
+
+.diag-controls {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+  margin-bottom: 8px;
+}
+
+.diag-status {
+  margin: 0 0 8px;
+  color: var(--accent-2);
+  font-size: 0.85rem;
+}
+
+.diag-log {
+  margin: 0;
+  max-height: 200px;
+  overflow: auto;
+  padding: 10px;
+  border: 1px solid #2d486f;
+  border-radius: 10px;
+  background: #071426;
+  color: #cbe4ff;
+  font-size: 0.75rem;
+  line-height: 1.35;
+  white-space: pre-wrap;
+}
+
+.bottom-space {
+  height: 18px;
+}
+
+@media (min-width: 768px) {
+  .hero {
+    padding-top: 28px;
+  }
+
+  .panel {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 760px;
+  }
+
+  .freq-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
 }

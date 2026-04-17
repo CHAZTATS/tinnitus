@@ -1,20 +1,183 @@
-<ion-header [translucent]="true">
+<ion-header [translucent]="true" class="app-header">
   <ion-toolbar>
-    <ion-title>
-      Blank
-    </ion-title>
+    <ion-title>Tinnitus Sound Therapy</ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
-
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
+<ion-content [fullscreen]="true" class="therapy-content">
+  <div class="hero">
+    <h1>Tinnitus Sound Therapy</h1>
+    <p>
+      Based on cross-frequency de-correlating stimulus modulation
+    </p>
+    <a target="_blank" rel="noopener noreferrer" href="https://doi.org/10.1016/j.heares.2025.109335">
+      Yukhnovich et al., Hearing Research 2025
+    </a>
   </div>
+
+  <ion-card class="panel warning-panel">
+    <ion-card-content>
+      <p class="warning-title">Important</p>
+      <p>
+        This is an experimental tool based on published research. Consult a healthcare professional before use.
+      </p>
+      <ul>
+        <li>Start low and increase gradually. The sound should be comfortable, not loud.</li>
+        <li>Listen daily for approximately 60 minutes.</li>
+        <li>You can listen while doing other activities.</li>
+        <li>Use headphones for best results.</li>
+        <li>The study showed significant improvement after 6 weeks of daily listening.</li>
+      </ul>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="panel">
+    <ion-card-header>
+      <ion-card-title>1. Tinnitus Frequency</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p class="info">Select the frequency closest to your tinnitus pitch. Tap to preview each tone.</p>
+
+      <div class="freq-grid">
+        <button
+          type="button"
+          class="freq-btn"
+          [class.selected]="selectedFreqIndex === i"
+          *ngFor="let freq of frequencies; let i = index"
+          (click)="selectFrequency(i)"
+        >
+          {{ freq >= 1000 ? (freq / 1000).toFixed(1).replace('.0', '') + ' kHz' : freq + ' Hz' }}
+        </button>
+      </div>
+
+      <p class="selected-label">Selected: <span>{{ selectedFrequencyLabel }}</span></p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="panel">
+    <ion-card-header>
+      <ion-card-title>2. Hearing Profile</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item lines="none" class="control-item">
+        <ion-label>High-frequency hearing correction</ion-label>
+        <ion-select [value]="hearingProfile" (ionChange)="onHearingProfileChange($event)">
+          <ion-select-option *ngFor="let profile of hearingProfiles" [value]="profile.value">
+            {{ profile.label }}
+          </ion-select-option>
+        </ion-select>
+      </ion-item>
+      <p class="info">If high frequencies sound quieter than low frequencies, select a hearing loss option.</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="panel">
+    <ion-card-header>
+      <ion-card-title>3. Modulation Type</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-item lines="none" class="control-item">
+        <ion-label>Type</ion-label>
+        <ion-select [value]="modType" (ionChange)="onModTypeChange($event)">
+          <ion-select-option value="amp">Amplitude modulation (recommended)</ion-select-option>
+          <ion-select-option value="phase">Phase modulation</ion-select-option>
+        </ion-select>
+      </ion-item>
+      <p class="info">Both types showed similar efficacy in the study.</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="panel">
+    <ion-card-header>
+      <ion-card-title>4. Balance (L/R)</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-range
+        [value]="pan"
+        min="-100"
+        max="100"
+        step="1"
+        pin="true"
+        (ionInput)="onPanChange($event)"
+      ></ion-range>
+      <p class="value-row">{{ pan }} {{ panLabel }}</p>
+      <p class="info">Adjust if your tinnitus is stronger on one side.</p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="panel">
+    <ion-card-header>
+      <ion-card-title>5. Volume</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <ion-range
+        [value]="volume"
+        min="0"
+        max="100"
+        step="1"
+        pin="true"
+        (ionInput)="onVolumeChange($event)"
+      ></ion-range>
+      <p class="value-row">{{ volume }}%</p>
+      <p class="info">Start low and increase gradually. The sound should be comfortable, not loud.</p>
+    </ion-card-content>
+  </ion-card>
+
+  <div class="controls">
+    <ion-button color="primary" size="large" [disabled]="isPlaying" (click)="togglePlay()">Start Therapy</ion-button>
+    <ion-button color="danger" size="large" [disabled]="!isPlaying" (click)="stopPlay()">Stop</ion-button>
+  </div>
+
+  <canvas class="visualizer" #visualizer></canvas>
+
+  <div class="status" [class.playing]="isPlaying" [class.stopped]="!isPlaying">
+    <div class="timer">{{ timerLabel }}</div>
+    <div>{{ statusText }}</div>
+  </div>
+
+  <ion-card class="panel">
+    <ion-card-header>
+      <ion-card-title>Session History</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p *ngIf="!hasHistory" class="empty-history">No sessions recorded yet.</p>
+      <ion-list *ngIf="hasHistory" class="history-list">
+        <ion-item lines="full" *ngFor="let item of historyDays">
+          <ion-label>{{ item.day }}</ion-label>
+          <span class="history-duration">{{ item.durationLabel }}</span>
+        </ion-item>
+        <ion-item lines="none" class="total-row">
+          <ion-label>Total</ion-label>
+          <span class="history-duration">{{ totalHistoryLabel }}</span>
+        </ion-item>
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="panel notes">
+    <ion-card-content>
+      <p>
+        For lock-screen playback on mobile, keep this as a native Capacitor app and enable background audio mode in your iOS and Android builds.
+      </p>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-card class="panel diagnostics">
+    <ion-card-header>
+      <ion-card-title>Playback Diagnostics</ion-card-title>
+    </ion-card-header>
+    <ion-card-content>
+      <p class="info">
+        Logs visibility/background events and audio context state every 5 seconds while playback is active.
+      </p>
+      <div class="diag-controls">
+        <ion-button size="small" fill="outline" (click)="copyDiagnostics()">Copy Logs</ion-button>
+        <ion-button size="small" fill="outline" color="medium" (click)="clearDiagnostics()">Clear</ion-button>
+      </div>
+      <p class="diag-status" *ngIf="diagnosticCopyStatus">{{ diagnosticCopyStatus }}</p>
+      <pre class="diag-log">{{ diagnosticsText || 'No diagnostics yet.' }}</pre>
+    </ion-card-content>
+  </ion-card>
+
+  <div class="bottom-space"></div>
 </ion-content>

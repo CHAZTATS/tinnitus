@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Tinnitus Therapy</string>
+    <string name="title_activity_main">Tinnitus Therapy</string>
+    <string name="package_name">com.example.tinnitus</string>
+    <string name="custom_url_scheme">com.example.tinnitus</string>
+</resources>
