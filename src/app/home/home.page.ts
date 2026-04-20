@@ -506,7 +506,7 @@ export class HomePage implements AfterViewInit, OnDestroy {
           : `${info.nextStimulusInSec.toFixed(2)}s`;
 
       this.addDiagnostic(
-        `settings: freq=${Math.round(info.tinnitusFreqHz)}Hz, mod=${info.modulationType}, hearingCorr=${info.hearingCorrectionMaxDb}dB, vol=${Math.round(info.outputVolume * 100)}%, pan=${Math.round(info.outputPan * 100)}`,
+        `settings: backend=${info.backend}, nativeLoaded=${info.nativeAssetLoaded}, freq=${Math.round(info.tinnitusFreqHz)}Hz, mod=${info.modulationType}, hearingCorr=${info.hearingCorrectionMaxDb}dB, vol=${Math.round(info.outputVolume * 100)}%, pan=${Math.round(info.outputPan * 100)}`,
       );
       this.addDiagnostic(
         `timing: state=${info.state}, t=${info.currentTime.toFixed(2)}s, sr=${info.sampleRate}, playing=${info.isPlaying}, scheduler=${info.schedulerActive ? 'on' : 'off'}, interval=${info.scheduledIntervalSec.toFixed(2)}s, silenceGap=${info.silenceGapSec.toFixed(2)}s, nextStimulus=${nextStimulusText}, queue=${info.queueHorizonSec.toFixed(2)}s/${info.scheduleAheadTimeSec.toFixed(2)}s, lookahead=${info.schedulerLookaheadMs}ms`,

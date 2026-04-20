@@ -1,4 +1,7 @@
 import { Injectable } from '@angular/core';
+import { NativeAudio } from '@capacitor-community/native-audio';
+import { Capacitor } from '@capacitor/core';
+import { Directory, Filesystem } from '@capacitor/filesystem';
 
 export type ModulationType = 'amp' | 'phase';
 
@@ -9,6 +12,12 @@ export class TinnitusTherapyService {
   private audioContext: AudioContext | null = null;
   private masterGain: GainNode | null = null;
   private pannerNode: StereoPannerNode | null = null;
+  private readonly useNativeAudio = Capacitor.isNativePlatform();
+  private readonly nativeAssetId = 'tinnitus-therapy-loop';
+  private readonly nativeLoopDurationSec = 32;
+  private nativeAssetFileName: string | null = null;
+  private nativeAssetLoaded = false;
+  private nativeInitPromise: Promise<void> | null = null;
 
   private isPlaying = false;
   private nextScheduleTime = 0;
@@ -80,6 +89,8 @@ export class TinnitusTherapyService {
     state: AudioContextState;
     currentTime: number;
     sampleRate: number;
+    backend: 'native-audio' | 'webaudio';
+    nativeAssetLoaded: boolean;
     isPlaying: boolean;
     schedulerActive: boolean;
     stimulusDurationSec: number;
@@ -116,6 +127,8 @@ export class TinnitusTherapyService {
       state: this.audioContext.state,
       currentTime,
       sampleRate: this.audioContext.sampleRate,
+      backend: this.useNativeAudio ? 'native-audio' : 'webaudio',
+      nativeAssetLoaded: this.nativeAssetLoaded,
       isPlaying: this.isPlaying,
       schedulerActive: this.schedulerInterval !== null,
       stimulusDurationSec: this.stimulusDuration,
@@ -135,6 +148,14 @@ export class TinnitusTherapyService {
 
   public setVolume(value: number): void {
     this.volume = value;
+
+    if (this.useNativeAudio && this.nativeAssetLoaded) {
+      void NativeAudio.setVolume({
+        assetId: this.nativeAssetId,
+        volume: this.getNativeVolume(value),
+      });
+    }
+
     if (this.masterGain && this.audioContext) {
       this.masterGain.gain.setValueAtTime(value, this.audioContext.currentTime);
     }
@@ -142,12 +163,26 @@ export class TinnitusTherapyService {
 
   public setPan(value: number): void {
     this.pan = value;
+
+    if (this.useNativeAudio && this.isPlaying) {
+      void this.startNativeLoopPlayback();
+    }
+
     if (this.pannerNode && this.audioContext) {
       this.pannerNode.pan.setValueAtTime(value, this.audioContext.currentTime);
     }
   }
 
   public start(): void {
+    if (this.useNativeAudio) {
+      this.isPlaying = true;
+      this.nextAudibleStimulusTime = null;
+      this.lastStimulusStartTime = null;
+      this.lastStimulusIntervalSec = null;
+      void this.startNativeLoopPlayback();
+      return;
+    }
+
     this.ensureContext();
     if (!this.audioContext || !this.masterGain) {
       return;
@@ -170,6 +205,11 @@ export class TinnitusTherapyService {
   public stop(): void {
     this.isPlaying = false;
     this.nextAudibleStimulusTime = null;
+
+    if (this.useNativeAudio) {
+      void this.stopNativeLoopPlayback();
+      return;
+    }
 
     this.stopSchedulerLoop();
 
@@ -215,12 +255,200 @@ export class TinnitusTherapyService {
 
   public destroy(): void {
     this.stop();
+
+    if (this.useNativeAudio) {
+      return;
+    }
+
     if (this.audioContext) {
       void this.audioContext.close();
       this.audioContext = null;
       this.masterGain = null;
       this.pannerNode = null;
     }
+  }
+
+  private getNativeVolume(value: number): number {
+    return Math.max(0.001, Math.min(1, value));
+  }
+
+  private async startNativeLoopPlayback(): Promise<void> {
+    if (this.nativeInitPromise) {
+      return;
+    }
+
+    this.nativeInitPromise = this.startNativeLoopPlaybackInternal().finally(
+      () => {
+        this.nativeInitPromise = null;
+      },
+    );
+
+    await this.nativeInitPromise;
+  }
+
+  private async startNativeLoopPlaybackInternal(): Promise<void> {
+    try {
+      this.ensureContext();
+
+      const wavBase64 = this.generateNativeLoopWavBase64(
+        this.nativeLoopDurationSec,
+      );
+
+      await this.stopNativeLoopPlayback();
+
+      const fileName = `therapy-loop-${Date.now()}.wav`;
+      await Filesystem.writeFile({
+        path: fileName,
+        data: wavBase64,
+        directory: Directory.Cache,
+      });
+
+      const fileUri = await Filesystem.getUri({
+        path: fileName,
+        directory: Directory.Cache,
+      });
+
+      await NativeAudio.preload({
+        assetId: this.nativeAssetId,
+        assetPath: fileUri.uri,
+        audioChannelNum: 1,
+        isUrl: true,
+      });
+
+      this.nativeAssetLoaded = true;
+      this.nativeAssetFileName = fileName;
+
+      await NativeAudio.setVolume({
+        assetId: this.nativeAssetId,
+        volume: this.getNativeVolume(this.volume),
+      });
+      await NativeAudio.loop({ assetId: this.nativeAssetId });
+    } catch (error) {
+      this.isPlaying = false;
+      console.error('Native audio playback failed', error);
+    }
+  }
+
+  private async stopNativeLoopPlayback(): Promise<void> {
+    try {
+      if (this.nativeAssetLoaded) {
+        await NativeAudio.stop({ assetId: this.nativeAssetId });
+        await NativeAudio.unload({ assetId: this.nativeAssetId });
+      }
+    } catch {
+      // Ignore stop/unload errors during shutdown.
+    }
+
+    if (this.nativeAssetFileName) {
+      try {
+        await Filesystem.deleteFile({
+          path: this.nativeAssetFileName,
+          directory: Directory.Cache,
+        });
+      } catch {
+        // Ignore missing-file cleanup errors.
+      }
+    }
+
+    this.nativeAssetLoaded = false;
+    this.nativeAssetFileName = null;
+  }
+
+  private generateNativeLoopWavBase64(loopDurationSec: number): string {
+    this.ensureContext();
+
+    const segments = Math.max(
+      1,
+      Math.round(loopDurationSec / this.stimulusDuration),
+    );
+    const samplesPerSegment = Math.floor(
+      this.stimulusDuration * this.sampleRate,
+    );
+    const totalSamples = segments * samplesPerSegment;
+    const monoData = new Float32Array(totalSamples);
+
+    let offset = 0;
+    for (let i = 0; i < segments; i += 1) {
+      const segment = this.generateStimulus();
+      const channel = segment.getChannelData(0);
+      monoData.set(channel, offset);
+      offset += channel.length;
+    }
+
+    const pan = Math.max(-1, Math.min(1, this.pan));
+    const leftGain = pan <= 0 ? 1 : 1 - pan;
+    const rightGain = pan >= 0 ? 1 : 1 + pan;
+    const leftData = new Float32Array(totalSamples);
+    const rightData = new Float32Array(totalSamples);
+
+    for (let i = 0; i < totalSamples; i += 1) {
+      leftData[i] = monoData[i] * leftGain;
+      rightData[i] = monoData[i] * rightGain;
+    }
+
+    return this.encodeStereoFloatToWavBase64(leftData, rightData);
+  }
+
+  private encodeStereoFloatToWavBase64(
+    leftSamples: Float32Array,
+    rightSamples: Float32Array,
+  ): string {
+    const numChannels = 2;
+    const bitsPerSample = 16;
+    const bytesPerSample = bitsPerSample / 8;
+    const frameCount = Math.min(leftSamples.length, rightSamples.length);
+    const dataSize = frameCount * numChannels * bytesPerSample;
+    const buffer = new ArrayBuffer(44 + dataSize);
+    const view = new DataView(buffer);
+
+    this.writeWavHeader(view, frameCount, numChannels, bitsPerSample);
+
+    let writeOffset = 44;
+    for (let i = 0; i < frameCount; i += 1) {
+      const left = Math.max(-1, Math.min(1, leftSamples[i]));
+      const right = Math.max(-1, Math.min(1, rightSamples[i]));
+      const leftInt16 = left < 0 ? left * 0x8000 : left * 0x7fff;
+      const rightInt16 = right < 0 ? right * 0x8000 : right * 0x7fff;
+      view.setInt16(writeOffset, leftInt16, true);
+      writeOffset += 2;
+      view.setInt16(writeOffset, rightInt16, true);
+      writeOffset += 2;
+    }
+
+    const bytes = new Uint8Array(buffer);
+    let binary = '';
+    const chunkSize = 0x8000;
+    for (let i = 0; i < bytes.length; i += chunkSize) {
+      const chunk = bytes.subarray(i, i + chunkSize);
+      binary += String.fromCharCode(...chunk);
+    }
+
+    return btoa(binary);
+  }
+
+  private writeWavHeader(
+    view: DataView,
+    sampleCount: number,
+    numChannels: number,
+    bitsPerSample: number,
+  ): void {
+    const blockAlign = (numChannels * bitsPerSample) / 8;
+    const byteRate = this.sampleRate * blockAlign;
+    const dataSize = sampleCount * blockAlign;
+
+    view.setUint32(0, 0x52494646, false);
+    view.setUint32(4, 36 + dataSize, true);
+    view.setUint32(8, 0x57415645, false);
+    view.setUint32(12, 0x666d7420, false);
+    view.setUint32(16, 16, true);
+    view.setUint16(20, 1, true);
+    view.setUint16(22, numChannels, true);
+    view.setUint32(24, this.sampleRate, true);
+    view.setUint32(28, byteRate, true);
+    view.setUint16(32, blockAlign, true);
+    view.setUint16(34, bitsPerSample, true);
+    view.setUint32(36, 0x64617461, false);
+    view.setUint32(40, dataSize, true);
   }
 
   private getModulationBandIndex(tinnitusFreq: number): number {
