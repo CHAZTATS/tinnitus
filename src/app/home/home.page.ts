@@ -265,6 +265,17 @@ export class HomePage implements AfterViewInit, OnDestroy {
 
   public onPanChange(event: CustomEvent<{ value: RangeValue }>): void {
     this.pan = this.extractRangeValue(event.detail.value, this.pan);
+
+    const deferNativePanApply =
+      this.isPlaying && this.generator.usingNativeAudio;
+
+    if (!deferNativePanApply) {
+      this.generator.setPan(this.pan / 100);
+    }
+  }
+
+  public onPanCommit(event: CustomEvent<{ value: RangeValue }>): void {
+    this.pan = this.extractRangeValue(event.detail.value, this.pan);
     this.generator.setPan(this.pan / 100);
     this.persistSettings();
   }

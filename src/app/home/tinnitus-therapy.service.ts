@@ -54,6 +54,10 @@ export class TinnitusTherapyService {
   public volume = 0.3;
   public pan = 0;
 
+  public get usingNativeAudio(): boolean {
+    return this.useNativeAudio;
+  }
+
   public constructor() {
     const fb: number[] = [];
     for (let i = -4; i <= 8; i += 1) {
