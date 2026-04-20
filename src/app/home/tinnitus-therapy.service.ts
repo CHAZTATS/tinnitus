@@ -15,9 +15,13 @@ export class TinnitusTherapyService {
   private readonly useNativeAudio = Capacitor.isNativePlatform();
   private readonly nativeAssetId = 'tinnitus-therapy-loop';
   private readonly nativeLoopDurationSec = 32;
+  private readonly nativeCacheFileName = 'therapy-loop-current.wav';
+  private readonly nativeUniqueSegments = 2;
   private nativeAssetFileName: string | null = null;
   private nativeAssetLoaded = false;
+  private nativeAssetSignature: string | null = null;
   private nativeInitPromise: Promise<void> | null = null;
+  private nativePanRefreshTimeout: ReturnType<typeof setTimeout> | null = null;
 
   private isPlaying = false;
   private nextScheduleTime = 0;
@@ -165,7 +169,7 @@ export class TinnitusTherapyService {
     this.pan = value;
 
     if (this.useNativeAudio && this.isPlaying) {
-      void this.startNativeLoopPlayback();
+      this.scheduleNativePanRefresh();
     }
 
     if (this.pannerNode && this.audioContext) {
@@ -207,7 +211,7 @@ export class TinnitusTherapyService {
     this.nextAudibleStimulusTime = null;
 
     if (this.useNativeAudio) {
-      void this.stopNativeLoopPlayback();
+      void this.stopNativeLoopPlayback(false);
       return;
     }
 
@@ -256,7 +260,13 @@ export class TinnitusTherapyService {
   public destroy(): void {
     this.stop();
 
+    if (this.nativePanRefreshTimeout) {
+      clearTimeout(this.nativePanRefreshTimeout);
+      this.nativePanRefreshTimeout = null;
+    }
+
     if (this.useNativeAudio) {
+      void this.stopNativeLoopPlayback(true);
       return;
     }
 
@@ -272,51 +282,45 @@ export class TinnitusTherapyService {
     return Math.max(0.001, Math.min(1, value));
   }
 
-  private async startNativeLoopPlayback(): Promise<void> {
-    if (this.nativeInitPromise) {
+  public warmUpNativeAudio(): void {
+    if (
+      !this.useNativeAudio ||
+      this.nativeAssetLoaded ||
+      this.nativeInitPromise
+    ) {
       return;
     }
 
-    this.nativeInitPromise = this.startNativeLoopPlaybackInternal().finally(
-      () => {
+    this.nativeInitPromise = this.ensureNativeLoopAsset(false)
+      .catch((error) => {
+        console.error('Native audio warmup failed', error);
+      })
+      .finally(() => {
         this.nativeInitPromise = null;
-      },
-    );
+      });
+  }
+
+  private async startNativeLoopPlayback(forceRebuild = false): Promise<void> {
+    if (this.nativeInitPromise) {
+      await this.nativeInitPromise;
+    }
+
+    this.nativeInitPromise = this.startNativeLoopPlaybackInternal(
+      forceRebuild,
+    ).finally(() => {
+      this.nativeInitPromise = null;
+    });
 
     await this.nativeInitPromise;
   }
 
-  private async startNativeLoopPlaybackInternal(): Promise<void> {
+  private async startNativeLoopPlaybackInternal(
+    forceRebuild: boolean,
+  ): Promise<void> {
     try {
       this.ensureContext();
 
-      const wavBase64 = this.generateNativeLoopWavBase64(
-        this.nativeLoopDurationSec,
-      );
-
-      await this.stopNativeLoopPlayback();
-
-      const fileName = `therapy-loop-${Date.now()}.wav`;
-      await Filesystem.writeFile({
-        path: fileName,
-        data: wavBase64,
-        directory: Directory.Cache,
-      });
-
-      const fileUri = await Filesystem.getUri({
-        path: fileName,
-        directory: Directory.Cache,
-      });
-
-      await NativeAudio.preload({
-        assetId: this.nativeAssetId,
-        assetPath: fileUri.uri,
-        audioChannelNum: 1,
-        isUrl: true,
-      });
-
-      this.nativeAssetLoaded = true;
-      this.nativeAssetFileName = fileName;
+      await this.ensureNativeLoopAsset(forceRebuild);
 
       await NativeAudio.setVolume({
         assetId: this.nativeAssetId,
@@ -329,17 +333,60 @@ export class TinnitusTherapyService {
     }
   }
 
-  private async stopNativeLoopPlayback(): Promise<void> {
+  private async ensureNativeLoopAsset(forceRebuild: boolean): Promise<void> {
+    const targetSignature = this.getNativeAssetSignature();
+    const needsRebuild =
+      forceRebuild ||
+      !this.nativeAssetLoaded ||
+      this.nativeAssetSignature !== targetSignature;
+
+    if (!needsRebuild) {
+      return;
+    }
+
+    if (this.nativeAssetLoaded) {
+      await this.stopNativeLoopPlayback(true);
+    }
+
+    const wavBase64 = this.generateNativeLoopWavBase64(
+      this.nativeLoopDurationSec,
+    );
+
+    await Filesystem.writeFile({
+      path: this.nativeCacheFileName,
+      data: wavBase64,
+      directory: Directory.Cache,
+    });
+
+    const fileUri = await Filesystem.getUri({
+      path: this.nativeCacheFileName,
+      directory: Directory.Cache,
+    });
+
+    await NativeAudio.preload({
+      assetId: this.nativeAssetId,
+      assetPath: fileUri.uri,
+      audioChannelNum: 1,
+      isUrl: true,
+    });
+
+    this.nativeAssetLoaded = true;
+    this.nativeAssetFileName = this.nativeCacheFileName;
+    this.nativeAssetSignature = targetSignature;
+  }
+
+  private async stopNativeLoopPlayback(unloadAsset: boolean): Promise<void> {
     try {
-      if (this.nativeAssetLoaded) {
-        await NativeAudio.stop({ assetId: this.nativeAssetId });
+      await NativeAudio.stop({ assetId: this.nativeAssetId });
+
+      if (unloadAsset && this.nativeAssetLoaded) {
         await NativeAudio.unload({ assetId: this.nativeAssetId });
       }
     } catch {
       // Ignore stop/unload errors during shutdown.
     }
 
-    if (this.nativeAssetFileName) {
+    if (unloadAsset && this.nativeAssetFileName) {
       try {
         await Filesystem.deleteFile({
           path: this.nativeAssetFileName,
@@ -350,8 +397,33 @@ export class TinnitusTherapyService {
       }
     }
 
-    this.nativeAssetLoaded = false;
-    this.nativeAssetFileName = null;
+    if (unloadAsset) {
+      this.nativeAssetLoaded = false;
+      this.nativeAssetFileName = null;
+      this.nativeAssetSignature = null;
+    }
+  }
+
+  private getNativeAssetSignature(): string {
+    return [
+      Math.round(this.tinnitusFreq),
+      this.hearingCorrectionMax,
+      this.modType,
+      Math.round(this.pan * 1000) / 1000,
+    ].join(':');
+  }
+
+  private scheduleNativePanRefresh(): void {
+    if (this.nativePanRefreshTimeout) {
+      clearTimeout(this.nativePanRefreshTimeout);
+    }
+
+    this.nativePanRefreshTimeout = setTimeout(() => {
+      this.nativePanRefreshTimeout = null;
+      if (this.isPlaying) {
+        void this.startNativeLoopPlayback();
+      }
+    }, 120);
   }
 
   private generateNativeLoopWavBase64(loopDurationSec: number): string {
@@ -367,10 +439,19 @@ export class TinnitusTherapyService {
     const totalSamples = segments * samplesPerSegment;
     const monoData = new Float32Array(totalSamples);
 
+    const uniqueSegments = Math.max(
+      1,
+      Math.min(this.nativeUniqueSegments, segments),
+    );
+    const generatedSegments: Float32Array[] = [];
+
+    for (let i = 0; i < uniqueSegments; i += 1) {
+      generatedSegments.push(this.generateStimulus().getChannelData(0).slice());
+    }
+
     let offset = 0;
     for (let i = 0; i < segments; i += 1) {
-      const segment = this.generateStimulus();
-      const channel = segment.getChannelData(0);
+      const channel = generatedSegments[i % uniqueSegments];
       monoData.set(channel, offset);
       offset += channel.length;
     }

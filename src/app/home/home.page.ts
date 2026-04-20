@@ -109,6 +109,7 @@ export class HomePage implements AfterViewInit, OnDestroy {
   private timerInterval: ReturnType<typeof setInterval> | null = null;
   private playbackStartedAt = 0;
   private diagnosticsInterval: ReturnType<typeof setInterval> | null = null;
+  private nativeWarmupTimeout: ReturnType<typeof setTimeout> | null = null;
   private readonly visibilityHandler = (): void => {
     this.addDiagnostic(`visibility: ${document.hidden ? 'hidden' : 'visible'}`);
   };
@@ -139,6 +140,12 @@ export class HomePage implements AfterViewInit, OnDestroy {
     window.addEventListener('pageshow', this.pageShowHandler);
     this.addDiagnostic('diagnostics initialized');
     this.updateMediaSession();
+
+    this.nativeWarmupTimeout = setTimeout(() => {
+      this.generator.warmUpNativeAudio();
+      this.addDiagnostic('native audio warmup requested');
+      this.nativeWarmupTimeout = null;
+    }, 300);
   }
 
   public ngOnDestroy(): void {
@@ -148,6 +155,12 @@ export class HomePage implements AfterViewInit, OnDestroy {
     window.removeEventListener('focus', this.focusHandler);
     window.removeEventListener('pagehide', this.pageHideHandler);
     window.removeEventListener('pageshow', this.pageShowHandler);
+
+    if (this.nativeWarmupTimeout) {
+      clearTimeout(this.nativeWarmupTimeout);
+      this.nativeWarmupTimeout = null;
+    }
+
     this.stopPlayback(false);
     this.generator.destroy();
   }
