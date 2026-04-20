@@ -1,0 +1,783 @@
+                                 Hearing Research 464 (2025) 109335
+                            Contents lists available at ScienceDirect
+
+                           Hearing Research
+
+                  journal homepage: www.elsevier.com/locate/heares
+
+Chronic tinnitus is quietened by sound therapy using a novel
+cross-frequency de-correlating stimulus modulation
+
+E.A. Yukhnovich a,* , S. Harrison c, N. Wray d, K. Alter a,b, W. Sedley a
+
+a Newcastle University Medical School, Newcastle upon Tyne NE2 4HH, UK
+b Faculty of Modern and Medieval Languages and Linguistics and the Languages Sciences Interdisciplinary Research Centre, University of Cambridge CB3 9DA, UK
+c Tinnitus Works Ltd, UK
+d Tinnitus UK, Unit 5 Acorn Business Park, Woodseats Close, Sheffield S8 0 TB, UK
+
+ARTICLE INFO      ABSTRACT
+
+Keywords:         We introduce a novel modulation of broadband sounds which eliminates correlations between all frequency pairs
+Tinnitus          close to the tinnitus frequency, to reduce cross-frequency neural synchrony and thereby quieten tinnitus. Fifty-
+Sound therapy     three unselected participants completed a blinded randomised crossover trial, which was run completely online
+Spectral ripples  using their computers or smartphones, comparing active to perceptually-near-identical sham stimuli, comprising
+Sound modulation  two 6-week listening periods and 3-week washout periods. Results showed a significant, persisting, reduction in
+Online trial      self-rated tinnitus loudness after the active (p = 0.012), but not sham (p = 0.916) intervention. Tinnitus distress
+                  scores decreased in both listening periods, indicating tolerability of the intervention and trial process. Due to its
+                  automation, generalisability across tinnitus types, and deliverability with generic hardware, this intervention
+                  could be made available to most of the worldwide tinnitus community at minimal cost. Next steps involve
+                  optimising the intervention parameters to maximise efficacy, and development of a software package for
+                  wholescale delivery.
+
+1. Introduction                                                            Searchfield and Searchfield, 2021; Wang et al., 2020). Modulated
+                                                                           sounds can be used with the goal of reducing tinnitus loudness, with
+    Chronic tinnitus is a persistent sound heard by an individual without  modulations generally tailored to the tinnitus features of each individ
+an environmental source, which affects 10­15 % of the population           ual, particularly frequency, and aim to alter processes associated with
+(Adjamian et al., 2009). Tinnitus can be non-bothersome, but over 20 %     tinnitus causation and maintenance, such as lateral inhibition, cortical
+of people with tinnitus seek treatment. However, patients with tinnitus    reorganisation, pathological central gain or neural synchrony (Angeloni
+tend to find treatments difficult to access and largely ineffective, or    et al., 2023; Auerbach et al., 2014; Eggermont, 2003; Eggermont and
+misaligned from their main concern; patients mostly want to reduce         Tass, 2015; Haider et al., 2018; Noren~a, 2015; Roberts and Salvi, 2019;
+tinnitus loudness, while majority of available treatments are focused on   Sedley, 2019; Shore and Wu, 2019). While some therapies involve
+reactions to tinnitus, as widely-available evidence-based treatments to    concomitant psychological therapy or other forms of in-person treat
+quieten the tinnitus sound itself are lacking (Carmody et al., 2023;       ment (Jastreboff and Hazell, 1993; Vernon, 1976; Vernon and
+Husain et al., 2018). Due to the large mismatch between the very high      Schleuning, 1978), other types focus purely on modulated sounds. Some
+prevalence of tinnitus and the much lower capacity of specialist audi      examples of sound therapies are described below.
+ology or tinnitus clinics, any treatment aiming to become a mainstay of
+management should be deliverable either in primary care, or outside of a   2. Types of sound therapy
+clinical setting altogether.
+                                                                           2.1. Tailor-made notched music training
+    Sound-based therapies are attractive as a treatment option for
+tinnitus due to deliverability with widely available hardware. They are        Tailor-made notched music training (TMNMT) is a treatment for
+easily accepted by tinnitus patients, for whom external sounds are used    tonal tinnitus, in which a frequency band surrounding the tinnitus
+to provide relief from tinnitus symptoms (Folmer and Carroll, 2006;
+
+  * Corresponding author.
+     E-mail address: ney14@newcastle.ac.uk (E.A. Yukhnovich).
+
+https://doi.org/10.1016/j.heares.2025.109335
+Received 22 January 2025; Received in revised form 4 June 2025; Accepted 4 June 2025
+Available online 8 June 2025
+0378-5955/© 2025 The Authors. Published by Elsevier B.V. This is an open access article under the CC BY license (http://creativecommons.org/licenses/by/4.0/).
+E.A. Yukhnovich et al.                                                                                                                                Hearing Research 464 (2025) 109335
+
+frequency is removed from an auditory stimulus (Pantev et al., 2012;            Additionally, a later double-blind RCT showed that training at any fre
+Stein et al., 2016). Therefore, it requires accurate estimation of tinnitus     quency, not just around hearing loss frequency, improved Tinnitus
+frequency conducted by a specialist, and a single tinnitus sound with a         Handicap Questionnaire scores, so the ADT resulted in generic, not
+clearly defined and consistent frequency. A randomised controlled trial         tinnitus-specific, improvements (Hoare et al., 2012).
+(RCT) and a stratified double blind two-arm study were conducted at
+different time scales, and the comparison between them showed that 3            2.6. Bimodal therapies
+months was likely not enough to create a significant effect on self-rated
+tinnitus loudness scores, while after 12 months the effects were more               The somatosensory system may be involved in hearing loss-related
+apparent (Okamoto et al., 2010; Stein et al., 2016). However, re                tinnitus (Hamilton and al., 2016). An example is trigeminal nerve
+searchers reported a considerable number of participants experiencing           stimulation through an electrode put on the tongue, paired with audi
+adverse effects during the study (Stein et al., 2016).                          tory stimuli particularly at frequencies affected by sensorineural hearing
+                                                                                loss, which has been shown to reduce tinnitus impact symptoms ac
+2.2. Enriched acoustic environment                                              cording to THI and Tinnitus Functional Index (TFI) scores (Conlon et al.,
+                                                                                2020; ; Hamilton and al., 2016; Meikle et al., 2012). However, there was
+    Enriched acoustic environment aims to prevent tonotopic reorgan             no sham/placebo control group, and participants needed to visit the
+isation by playing high frequency stimuli soon after noise trauma, with         clinic every 2 weeks.
+matching done under specialist supervision (Noren~a and Eggermont,
+2005). The difficulty with this treatment is that tinnitus may appear               Bimodal treatment with vagal nerve stimulation was shown to be
+gradually, and patients may not access treatment during initial tinnitus        effective for tonal and non-blast-induced tinnitus in a double-blind RCT
+development (H. Wang et al., 2020). Another study found that                    (Tyler et al., 2017). But, based on the confidence intervals, treatment
+compensating for hearing loss with this treatment was not beneficial,           and control groups had a lot of overlap in THI scores. Additionally, on
+due to potential worsening of the symptoms if the treatment stimulus            average, there was an increase in tinnitus loudness, particularly in the
+overcompensated for hearing loss (Vanneste et al., 2013).                       treatment group. A recent systematic review of vagal nerve stimulation
+                                                                                trials identified limitations such as adverse effects from implantation,
+2.3. Broadband noise                                                            and consequently the effectiveness cannot yet be concluded (Stegeman
+                                                                                et al., 2021).
+    The Levo® device is a custom specialised earbud system that plays
+broadband noise, shaped to the tinnitus spectrum of each patient, while             A preliminary RCT compared one group with non-somatosensory
+they are asleep (Pedemonte et al., 2014). In an RCT, participants were          sensorineural tinnitus that received sound stimulation alone to
+assigned either the Levo® system with a tinnitus-like stimulus, Levo®           another group who received simultaneous sound and transcutaneous
+with white noise stimulus, or a bedside sound generator device. Audi            microcurrent stimulation applied to the bone behind each ear (Lee et al.,
+ological testing was performed at a clinic. All participants also received      2024). Both groups listened to broadband noise, notch filtered around
+some educational tinnitus counselling. After 3 months of intervention,          the tinnitus frequency, through bone-conduction headphones. Partici
+the tinnitus-like group showed the largest absolute reduction of mean           pants were assessed by audiologists and trained to use microcurrent
+loudness score. This Levo® device is commercially available, costing            stimulation devices in person. After 3 months (though not 1.5 months),
+around $4500 (Theodoroff Sarah et al., 2017).                                   both groups showed significant decreases in visual analogue scale (VAS)
+                                                                                loudness scores, but the effect size for the simultaneous stimulation
+2.4. Coordinated reset neuromodulation                                          group was larger than for the sound therapy only group, though there
+                                                                                was no blinding or sham/placebo control.
+    In coordinated reset (CR) neuromodulation therapy, a specifically-
+timed sequence of various short tones is played at frequencies around               Combined sound therapy and occipital nerve stimulation is an
+a precisely matched tinnitus frequency, aiming to desynchronise                 encouraging sound therapy method for somatic tinnitus (Jones et al.,
+tinnitus-related neural networks (Tass and Hauptmann, 2009). This               2023). In a double-blind RCT, patients with tinnitus who had clinical
+method requires patients to have tonal tinnitus. While some randomised          indicators of somatosensory system involvement were split into two
+studies show positive effects on tinnitus perception after CR neuro             groups (active: combined auditory and somatosensory followed by
+modulation therapy, subsequent larger studies have not shown a sig              auditory only, or control: the opposite order). Both groups showed re
+nificant effect on tinnitus loudness (Adamchic et al., 2017; Hall et al.,       ductions in TFI scores, however the combined treatment produced a
+2022). Due to, in part, inconsistent tinnitus and sample groups (in NICE        larger decrease than the auditory only treatment. The tinnitus loudness
+2020 clinical evidence summary, CR modulation studies were rated as             levels also decreased in both groups; however, the decrease was more
+`very low' quality of evidence), commercialisation of CR neuro                  significant in the combined group. Moreover, the TFI and loudness level
+modulation has so far not been successful (Tinnitus: assessment and             continued to reduce in the combined group through the washout period.
+management 2020).
+                                                                                3. Summary
+2.5. Auditory discrimination training
+                                                                                    Overall, available sound therapies are not yet showing large average
+    Auditory discrimination training (ADT) is based on lateral inhibition,      clinical effects in terms of tinnitus loudness. Many work only for specific
+aiming to disrupt neural synchrony (Rodríguez-Leo´n et al., 2022). Pa           types of tinnitus, as part of a comprehensive treatment programme
+tients with tonal tinnitus are trained to separate sound frequencies in         involving psychological intervention, need specialised equipment, are
+complex stimuli based around (but not identical to) their tinnitus fre          expensive, are not fully accessible to the public for various reasons, and/
+quency and learn to re-categorise and ignore the tinnitus sound (Hoare          or require in-person accurate matching with the supervision of an
+et al., 2010; Rodríguez-Leo´n et al., 2022). A comprehensive tinnitus ENT       audiologist or a researcher. Furthermore, tinnitus frequency matching is
+assessment is required. In an RCT, participants completed 20 min                unreliable even when performed by expert clinicians and researchers.
+discrimination tasks for 30 days (Herraiz et al., 2010). While the              Therefore, there remains a need both for more effective forms of sound
+Tinnitus Handicap Inventory (THI) (C.W. Newman et al., 1996) score of           therapy, and for further forms of sound therapy that have similar ben
+the ADT groups did decrease significantly after the treatment compared          efits to existing therapies, but are deliverable cheaply, safely and
+to a waiting list group, tinnitus loudness scores did not improve.              effectively on a large scale.
+
+                                                                             2
+E.A. Yukhnovich et al.                                                                                                                                Hearing Research 464 (2025) 109335
+
+3.1. Aims, hypotheses and approach                                              and the current study design was constructed with this in mind (H. Wang
+                                                                                et al., 2020). As this is the first trial using our de-correlating sound
+    Our aim was to develop a type of sound therapy for tinnitus that is         modulation, there is no established period of time to eliminate
+effective in reducing tinnitus loudness, does not require direct clinician      carry-over effects from the first sound stimulus to the second (whether
+or researcher input, can be delivered with ordinary smartphone or               active or sham). Therefore, a three-week gap between the first and
+computer equipment and headphones, and can be applied to all subtypes           second rounds of listening was estimated to provide a reasonable bal
+of tinnitus without requiring precise tinnitus frequency matching (but          ance of reducing potential carry-over effects, whilst limiting attrition
+only approximate).                                                              from the study.
+
+    Our novel type of sound modulation was created, aiming to reduce                Finally, the study aimed to establish the feasibility of running a fully
+synchrony of neuronal activity in different frequency channels within           automated online interventional study in which participants with
+and surrounding the tinnitus frequency (or frequency range), as neural          tinnitus were asked to perform daily listening. If successful, such an
+synchrony models (which are dominant in current theory) suggest that            approach would prove useful not just for testing, and delivering, this
+tinnitus results in large part from excessive synchrony between neurons         form of sound therapy, but a potentially limitless range of other types of
+in the auditory pathway (Eggermont and Tass, 2015; Shore et al., 2016).         sound therapy with much greater numbers than in-lab studies. Impor
+This also accords with the sensory precision model of tinnitus, as sensory      tantly, as no direct clinician or researcher involvement was required in
+precision is most fully understood in terms of a precision matrix, which is     the setup or delivery process, any techniques used in this study could
+related to the covariance or correlation matrix across neuronal pop             potentially be rapidly rolled out on an unlimited scale to both tinnitus
+ulations (Hullfish et al., 2019; Sedley et al., 2016; Sedley et al., 2019;      patients and to people living with tinnitus who are not patients within a
+Yukhnovich et al., 2023). Stable relationships over time between the            healthcare system, and with little or no cost attached.
+activity patterns of multiple different neurons thus increase the preci
+sion of that activity, and increase its influence on perception. We             4. Methods & materials
+hypothesised that disrupting these established inter-frequency re
+lationships in neural populations related to tinnitus (i.e. those repre         4.1. Participants
+senting high frequencies close to the tinnitus frequency) would therefore
+reduce the perceived loudness of tinnitus (Sedley et al., 2016), and could          This online randomised blinded study was fully completed by 77
+be achieved by regular exposure to auditory stimuli that contained              participants. Volunteers were recruited from affiliated volunteer lists at
+spectral energy at all these frequencies but no stable correlation between      Newcastle University, via the Tinnitus UK, and via the Tinnitus Talk
+frequencies.                                                                    online forum. Inclusion criteria were being over 18 years of age, with
+                                                                                chronic tinnitus for over 6 months that did not have an objective
+    Motivated by (but not contingent upon) these theories, in our novel         physical source, and ability to make an informed choice about volun
+approach, broadband pitch stimuli were modulated within a one-octave            teering. Exclusion criteria included having pulsatile tinnitus, or pro
+frequency range approximately (but not needing to be exactly) centred           found hearing loss in the range of the higher frequencies as it was
+on the tinnitus frequency. The two approaches we arrived at are an              unlikely that the sounds used in this study would have effect on their
+extension of 1) amplitude and 2) frequency modulation methods (H.               tinnitus. Participants were discouraged from participating if they had
+Wang et al., 2020), with the additional key feature that either the             prior experience of their tinnitus being made worse by exposure to
+amplitude or frequency modulation characteristics continuously vary             moderately loud sounds or environments. No eligibility criteria related
+over time, so as to eliminate all net correlations between any frequency        to the subtype of subjective tinnitus.
+pairs (except for each frequency with itself). For the de-correlating
+sound stimulus, the modulation applied to the sounds was based on a             4.2. Ethics & inclusion statement
+down-sloping dynamic spectral ripple, modified in one additional novel
+way. Standard dynamic spectral ripples are sound stimuli containing                 Recruitment and data collection occurred between October 2020 and
+regular temporal and spectral modulations with a limited number of              April 2022. Approval was given by the Newcastle University Research
+parameters, which result in a spectral ripple drifting in time along the        Ethics Committee, and all participants gave electronic informed consent,
+frequency axis. However, these still create high levels of off-diagonal         in accordance with the Declaration of Helsinki (reference number
+correlation between frequencies, as the time-frequency drifting is con          11,138/2018). No information was collected about race, ethnicity, na
+stant, and therefore the activity in one frequency band has a highly            tional or social origin, sexual orientation, political or religious beliefs, or
+predictable relationship to current, past and/or upcoming activity in           health conditions unrelated to tinnitus. The study was registered with
+other frequency bands. In our modulation, the spectral modulation rate          the ISRCTN registry, reference number ISRCTN18390012.
+of the dynamic ripple constantly changed over time (specifically, it was
+sinusoidally modulated over a one octave range), and through this it was        4.3. Assessment & experimental design
+constantly changing the relationships between spectral frequencies,
+nullifying any enduring correlations.                                           4.3.1. Questionnaires
+                                                                                    Participants accessed the information sheet online via Outlook Forms
+    A third condition, featuring a different kind of sound therapy, was
+also included, in which frequency-specific noise replacement sound was          and were able to ask questions to the research team via e-mail if they had
+presented to participants, with the aim to encourage the brain to reduce        outstanding queries. The information sheet contained frequently asked
+estimated precision in tinnitus-related frequency channels by removing          questions. Participants were given an anonymised identifier code to
+informational content whilst preserving acoustic spectral energy.               preserve their identity. They could come back to the form again if they
+Informational content is the complexity profile of a sound segment              wished to think about their participation first. Once they decided to take
+(Guerrero et al., 2021). This approach differed from the TMNMT                  part, participants signed an electronic consent form. After this, they
+approach, which is thought to work by lateral inhibition, and removes           answered the following questions: gender, any difficulty hearing, any
+acoustic energy also (Pantev et al., 2012).                                     difficulty following a conversation when there is background noise,
+                                                                                whether they use a hearing aid or a cochlear implant, age, tinnitus
+    To understand the tolerability and effectiveness of these three sound       duration, laterality of their tinnitus, type of their tinnitus sound, nu
+types, we compared them to a perceptually similar sham version of the           merical rating scale (NRS) scores of tinnitus loudness (0 = completely
+same stimuli (i.e. modulation applied at non-tinnitus frequency ranges)         inaudible to 10 = extremely loud) and distress, whether their tinnitus is
+in a blinded randomised crossover trial format. A recent review                 affected by moderately loud sounds either during or after exposure.
+concluded that there is a need for better controlled, randomised trials in
+order to identify the most effective tinnitus management techniques,
+
+                                                                             3
+E.A. Yukhnovich et al.                                                                                                                              Hearing Research 464 (2025) 109335
+
+Participants also completed the following standardised questionnaires:        sham phase, and answering questions from participants if applicable
+Tinnitus Handicap Inventory (THI) (C.W. Newman et al., 1996),                 (which was rarely required). Automated e-mail prompts to submit daily
+Tinnitus Functional Index (TFI) (Meikle et al., 2012) and Hyperacusis         listening figures and tinnitus symptom data at appropriate times were
+Questionnaire (HQ) (Khalfa et al., 2002).                                     sent to participants. Participants were blinded as to their group and
+                                                                              active/sham stage, and sound files were cryptically named so as to not
+4.3.2. Hearing slope and tinnitus frequency estimation                        convey information about their contents. Whilst the researcher had ac
+    Before the trial, each participant underwent approximation of their       cess to information the groups to which participants were allocated, they
+                                                                              did not refer to this when corresponding with participants. Overall, we
+slope of hearing loss (Fig 1) and tinnitus frequency using a procedure        believe the possibility of any degree of inadvertent unblinding to be
+involving listening to sound files provided on the study web page, and        negligible. In the sham condition, the modulation was applied to a
+reporting on the best fitting sound or file (Table 1). Specifically, each     different range of frequencies, usually below their tinnitus frequency
+hearing loss estimation sound file comprised a series of 17 pure tones in     (Table 1). The modulations were perceptually subtle, with perception
+ascending frequency order (frequencies corresponding to the columns of        dominated by the carrier stimulus to which it was applied, and feedback
+Table 1). Sound files differed according to how much the intensity of         from participants was that they could not knowingly differentiate active
+tones increased with increasing frequency, with a flat frequency spec         from sham sounds. Each participant completed the two listening periods
+trum being the smallest slope ("normal hearing"). Participants were           (active and sham, 6 weeks each), with 3-week washout periods after
+asked to listen to the four different files and choose the file in which all  each listening period (Fig 2). Before and after each listening period,
+17 frequencies sounded most similar in volume to each other. Using the        participants provided an NRS tinnitus loudness score and NRS tinnitus
+same file with 17 tones of different frequencies, participants were asked     annoyance score, and completed the THI, TFI and HQ questionnaires.
+to select one specific tone that most closely matched their tinnitus fre      Participants were asked to listen to the sounds each day of the listening
+quency (in the case of tonal tinnitus) or select one narrowband noise         period and complete a daily listening log via Google Forms where they
+stimulus from an equivalent series of narrowband noise stimuli for non-       recorded how long they listened to the sounds for. Participants were not
+tonal tinnitus (Table 1). This process did not need specialist software or    instructed to listen to the sounds for a specific duration per day, though
+researcher/audiologist input.                                                 audio files were 60 min long, which provided an implicit cue for
+                                                                              listening duration. As with the initial questionnaires and matching
+4.3.3. Trial organisation                                                     process, responses were submitted using Outlook Forms. Specific in
+    Participants were randomly assigned to receive either sham or active      structions were given regarding safe listening practices. These included:
+                                                                              1) No more than 60 % of their device's maximum volume; 2) No more
+sound therapy first, and then crossed over to the other type subsequently     than 60 min listening at a time; 3) Leave 60 min break between listening
+(Fig 2). Subjects were also randomised to receive one of three types of       sessions. Participants were allowed to use any sound delivery device
+modulated sound: 1) Amplitude modulation (N = 27), 2) Phase modu              (speakers or headphones), and could listen whilst doing other activities,
+lation (N = 26), or 3) noise replacement (N = 24). Each participant           as long as the sounds were audible.
+received only one type of modulated sound in the study, but both active
+and sham versions of that type. Interaction with a researcher was by e-           The primary outcome measure was the NRS loudness score, reflect
+mail only, for the purposes of sending the appropriate sound files for the    ing the intent being to quieten tinnitus itself rather than simply change
+subject's tinnitus match, hearing profile, modulation type and active/
+
+Fig. 1. Hearing correction profiles. Audio files used for hearing estimation and tinnitus matching included 8 sounds at ascending frequencies, from 1 kHz to 16 kHz.
+The four different frequency profiles are shown here. The blue line represents a normal hearing slope, in which each frequency band was equally loud. The red,
+yellow and purple curves illustrate the `mild', `moderate' and `severe' hearing loss correction profiles, respectively. These hearing correction slopes were modelled on
+the same shape, and differed only in the maximal correction (at the highest frequencies): 0, 15, 30 or 45 dB. Correction was 0 up to 2 kHz, 1/9 of maximum at 2.8
+kHz, increased linearly to 8/9 of maximum at 8 kHz, and were at maximum above 8 kHz. This profile shape was intuitively determined so as to achieve reasonable
+high-frequency hearing correction without involving extreme differences likely to lead to inaudibility at low frequencies or discomfort at high frequencies. Each
+subject's own preferred frequency-intensity correction profile was also applied to their active and sham therapeutic sounds used in the study. This method aimed to
+correct for sensorineural hearing loss, in which hearing thresholds of higher frequencies become elevated.
+
+                                                                                                                          4
+E.A. Yukhnovich et al.                                                                                                                Hearing Research 464 (2025) 109335
+
+Table 1                                                                                      modulation (range 0 to 2), constituting phase advancement to a
+Selection of active and sham modulation bands based on approximate tinnitus                  maximum of 1 cycle), the latter being equivalent to a frequency mod
+frequency match.                                                                             ulation (e.g. phase advancement going from 0 to 1 cycle over one second
+                                                                                             would be equivalent to a frequency modulation of +1 Hz).
+      1­2               1.4­2.8  2­4  2.8­5.7  4­8  5.7­11  8­16
+                                                                                                 Modulated harmonic complexes were generated as
+      kHz               kHz      kHz  kHz      kHz  kHz     kHz
+
+1.0   A1                         C1                                                           nmax              (                  )
+
+kHz                                                                                          s(t) = An(t)sin 2nf0t + n + n(t) ,                  (1)
+
+1.2   A1                         C1                                                          nmin
+
+kHz
+
+1.4   A1                         C1                                                          where s(t) is the stimulus waveform at time t (in seconds), n is the
+                                                                                             number of the harmonic of the fundamental frequency f0, min and max
+kHz                                                                                          refer to the lowest and highest harmonic numbers falling within the
+                                                                                             range of 1­16 kHz, n is a random phase offset per harmonic (range 0 to
+1.7   A2                A1            C1                                                     2).
+
+kHz                                                                                              The amplitude modulation term An(t) was fixed at 1 for the phase
+                                                                                             modulation stimuli, and for harmonics outside the modulated frequency
+2.0                     A1            C1                                                     band. For amplitude modulated frequencies it was defined as
+
+kHz
+
+2.4                     A2       A1            C1           
+
+kHz
+
+2.8                              A1            C1           
+
+kHz
+
+3.4                              A2   A1            C1                                       An(t) = 1 + dsin(2[t + FnS(t)] + q),
+
+kHz                                                                                                                                              (2)
+
+4.0                                   A1            C1      
+
+kHz                                                                                          where d is the modulation depth (1 in our implementation),  is the
+                                                                                             fixed temporal modulation rate (1 Hz in our implementation), and q is a
+4.8                     C2       C1   A2       A1                                            random phase offset for each stimulus (range 0 to 2).
+
+kHz                                                                                              The phase modulation term n(t) was fixed at 0 for the amplitude
+                                                                                             modulation stimuli, and for harmonics outside the modulated frequency
+5.7                              C1            A1                                            band. For phase modulated frequencies it was defined as
+
+kHz
+
+6.7                              C2   C1       A2   A1      
+
+kHz
+
+8.0                                   C1            A1      
+
+kHz                                                                                          n(t) = (1 + dsin(2[t + FnS(t)] + q)),               (3)
+
+9.5                                   C1            A1      
+
+kHz                                                                                          Fn is the octave distance of the harmonic from the logarithmic centre
+
+11.0                                           C1           A1                               (c) of the modulated frequency band, calculated as
+
+kHz                                                                                                ()
+                                                                                                        nf0
+13.0                                           C1           A1                               Fn = log2   c   .                                   (4)
+
+kHz
+
+16.0                                           C1           A1
+
+kHz                                                                                          S(t) denotes the time-varying spectral modulation rate, defined as
+
+Each participant selected the best match to their tinnitus frequency from 17 stimuli at      S(t) =  + rsin (p + 2vt),                           (5)
+the frequencies shown here (tones or narrowband noise stimuli, according to their
+stated tinnitus type) presented to them in a pre-recorded online file. This gave the         where  is its mean (4.5 cycles per oct in our implementation), r is its
+researcher an estimation of the tinnitus frequency around which the sound therapy            extent of variability (3 in our implementation), p is a random phase
+sound file should have the modulation applied. The 17 stimuli were of frequencies            offset (range 0 to 2), and  is a constant defining its rate of change
+corresponding to those in the table. There were 7 possible frequency bands to which          (0.125 in our implementation, i.e. a full SMR cycle duration of 8 s).
+modulation could be applied (to serve as either active or sham), indicated by the
+column titles of the table. The optimal modulation frequency band was selected to                Stimuli were generated in Matlab (version R2019a), and code for
+place the best tinnitus match frequency as close to the centre of the modulation band as     generating all stimuli is available online (see Data Availability
+possible. A1 indicates the preferred active frequency band, and C1 the preferred sham        Statement).
+frequency band. A contingency option was specified in case either the active or control
+modulation band contained frequencies the participant could not hear at all (A2 and              For readers unfamiliar with Matlab code or the mathematical spec
+C2, respectively).                                                                           ification above, an overview of the creation process for each stimulus is
+                                                                                             as follows:
+
+participant reactions to it. A detailed map of the experimental design can                   - Define a vector of time points based on stimulus duration (4 s) and
+be seen in Fig 2.                                                                              sampling rate (44,100 Hz)
+
+4.3.4. Therapeutic sound creation                                                            - Define the value of a sinusoidal SMR waveform at each time point
+    The carrier sounds, to which the active or sham versions of the three                      (Eq. (5), Fig. 3B)
+
+modulations were applied, were hour-long sequences of non-                                   - Determine a random fundamental frequency (range 96­256 Hz)
+overlapping 4 s broadband (spectrum 1­16 kHz) harmonic complexes                             - Perform the following steps for each harmonic (integer multiple of
+(flat spectrum unless adjusted to hearing profile), each with randomised
+fundamental frequency selected from a specific range (96­256 Hz), with                         the fundamental frequency) falling within the range of 1000 to
+1 s onset/offset cosine ramps. To approximately compensate for sloping                         16,000 Hz
+high frequency hearing loss, the spectra of the carrier stimuli were either                     If it falls outside the modulated range, then simply specify the
+flat, or contained additional energy in the higher frequencies, based on
+the hearing slope estimation of the individual participant. One of the                            harmonic as a sinusoid with a frequency of the fundamental fre
+four frequency correction profiles shown in Extended Data 3 was used                              quency times the harmonic number, and a random starting phase
+for each subject.                                                                               If it falls within the modulated range then calculate its modulation
+                                                                                                  waveform (Eq. (2) for Amplitude or 3 for Phase modulation, or the
+    Modulations 1 and 2: De-correlating amplitude and phase modulation                            horizontal row of the modulation matrix in Fig. 3C corresponding
+    Two alternative implementations of the de-correlating modulation                              to the harmonic's frequency)
+were applied (Fig 3­4): as 1) an amplitude modulation (range 0­2,                               For Amplitude modulation within the modulated range, generate
+yielding mean 1, i.e. unchanged mean amplitude), and 2) a phase                                   the harmonic as a sinusoid with random starting phase, and at each
+                                                                                                  time point multiply it by the modulation waveform
+
+                                                                                          5
+E.A. Yukhnovich et al.                                                         Hearing Research 464 (2025) 109335
+
+                        Fig. 2. Study procedure. Under each box, the number of participants who completed that step is indicated.
+
+     For Phase modulation within the modula( ted range, gene)rate the          harmonics in the tinnitus band by an octave-wide noise matched to the
+      harmonic according to the formula sin 2nf0t + n(t) , which               frequencies in the tinnitus band. This was done to preserve its time-
+       forms part of Eq. (1). This is simply an ordinary sin function, but     frequency power spectrum whilst eliminating informational content in
+      with the phase advancement value n added for each time point t.          the form of fine temporal structure. Harmonic complexes were other
+                                                                               wise generated as for modulation types 1 and 2, including organisation
+  - Summate all harmonics at each time point to yield the final stimulus       into 4 s stimuli with 1 s onset/offset ramps, and concatenation into hour-
+    waveform.                                                                  long audio tracks.
+
+  - Apply 1 s raised cosine onset and offset ramps                             4.3.5. Outcome measures and statistical analysis
+                                                                                   The primary outcome measure was a reduction in NRS loudness
+    Stimuli of 4 s each generated with this process were then concate
+nated to produce hour-long audio tracks.                                       score, however THI, TFI and HQ scores were also analysed as secondary
+                                                                               outcomes. The questionnaire and NRS loudness scores at the beginning
+    In the amplitude modulation implementation, the amplitude enve             of a listening round were compared to the scores at the end of the
+lopes of any off-diagonal pair of frequency channels were temporally           listening round using paired t-tests, in both active and sham. Then, the
+uncorrelated, but temporal fine structure was unaltered. In the phase          start score minus the end score value was calculated for each participant
+implementation, amplitude envelopes were unaltered, but phase corre            in active and in sham, and compared between the two conditions
+lations between frequency pairs were eliminated. We tested both mod            through paired t-tests; i.e. the value (active_pre_treatment ­ active_
+ulations, as we were not aware of any a-priori reason to favour either         post_treatment) compared to (sham_pre_treatment ­ sham_post_treat
+one of amplitude or temporal fine structure over the other as a deter          ment). This latter analysis, reflecting the difference in post- vs.pre-
+minant or (disrupting) the kind of cross-frequency neural synchrony            treatment scores between active and sham conditions, was used as the
+relevant to tinnitus. The modulations were perceptually subtle and had         primary measure of treatment efficacy.
+minimal effect on intelligibility or tolerability of the sounds.
+                                                                                   The amplitude and frequency modulation conditions showed near-
+    Modulation 3: Noise replacement
+    To produce the noise replacement sounds, we replaced the
+
+                                                                            6
+E.A. Yukhnovich et al.  Hearing Research 464 (2025) 109335
+
+Fig. 3. Basis and examples of novel modulation. Ai: Ordinary dynamic spectral ripples (fixed spectral modulation rate; SMR) maintain strong cross-frequency
+correlations besides the diagonal (i.e. each frequency's correlation with itself), which are eliminated (Aii) by varying SMR over time (B). C: The spectrotemporal
+modulation matrix is generated from a fixed temporal modulation rate (TMR) and variable SMR. The colour scale indicates the modulation applied to each time-
+frequency point in the stimulus, with yellow indicating maximal modulation and blue no modulation. In this example, modulation is applied only to the octave
+spanning 8­16 kHz, whilst frequencies below 8 kHz are left unmodulated, as indicated by the blue colour (zero modulation). Modulation matrix ripples were down-
+sloping over time, in our study, due to constraining SMR to only positive values. Di: Magnified section of modulation matrix applied to a harmonic complex stimulus
+as phase modulation, evident in subtle fluctuations in the frequency of harmonics (horizontal lines). Dii: Section of modulation matrix applied to a harmonic complex
+stimulus as amplitude modulation, evident in variable amplitude (colour intensity) of each harmonic over time.
+
+                                                                                                                          7
+E.A. Yukhnovich et al.                                                                                                                   Hearing Research 464 (2025) 109335
+
+Fig. 4. Stimulus examples (amplitude modulation): Carrier stimuli consist of 4 s harmonic complexes, with 1 s onset/offset raised cosine ramps. Carrier stimuli had
+random fundamental frequency, and harmonics (horizontal lines) from 1 kHz upwards. Note undisturbed spectrotemporal fine structure and net power spectrum of
+stimuli, and the tolerance to inexact tinnitus frequency matching, which is widely regarded as notoriously unreliable by any method. Active (left): modulation
+applied to the predefined octave frequency range (here 8­16 kHz) closest to centring on the approximated tinnitus frequency match (red line, 11 kHz). Sham (right):
+modulation applied to nearest non-tinnitus octave frequency range (here 4­8 kHz). Because the ripple percept is subtle, it is extremely difficult to tell whether a
+stimulus is active or sham. Note that in our implementation, an entire cycle of the spectrotemporal modulation was 8 s in duration, whilst carrier stimuli were 4 s in
+duration; hence, a random portion of the modulation was used for each stimulus.
+
+identical results in all outcome measures, so they were combined for        5. Results
+further analysis.
+                                                                            5.1. Days missed & average listening times
+
+                                                                                Demographic, tinnitus and hearing information for all 3 groups is
+                                                                            shown in Table 2. Across the 3 modulations, out of the 130 people that
+                                                                            started this largely unsupervised online longitudinal study, 77 finished it
+
+Table 2
+Participant demographic and symptom information.
+
+                             Amplitude (N = 27)          Phase (N = 26)                    Noise replacement (N = 24)                    Difference between groups
+
+Age                          54.33 (31­83)               58.15 (33­75)                     57.54 (41­75)                                 p = 0.373
+Tinnitus frequency match     1.4­13 kHz, mode: 9.5 kHz   2­17, mode: 8 kHz(19.2 %)         4­17, mode: 8 kHz (25 %)                      p = 0.712
+                             (both 18.5 %)
+Gender                       8 f, 19 m                   10 f, 16 m                        9 f, 15 m                                     p = 0.764
+Hearing slope match (Fig     8 NH                        15 NH                             11 NH                                         p = 0.128
+                             9 mild HL                   6 mild HL                         5 mild HL
+  1)                         5 moderate HL               3 moderate HL                     5 moderate HL                                 p = 0.028; sig. dif. between
+                             5 severe HL                 2 severe HL                       3 severe HL                                   amplitude & noise
+Self-perceived hearing       10 yes, 17 no               10 yes, 16 no                     17 yes, 7 no                                  p = 0.077
+  difficulty
+                             4 yes, 12 no, 11 sometimes  3 yes, 8 no, 15 sometimes         9 yes, 6 no, 9 sometimes
+Difficulty following
+  conversations              3 use most of the time, 24  2 use most of the time, 20 don't  7 use most of the time,                       p = 0.181
+                             don't have                  have,                             14 don't have,                                p = 0.971
+Hearing aids                                             4 have but don't use              3 have but don't use
+                                                         3 entirely left                   1 entirely left                               p = 0.876
+Which ear is tinnitus in     2 entirely left             8 mostly left                     7 mostly left                                 p = 0.193
+                             9 mostly left               9 roughly equal                   12 roughly equal                              
+Is tinnitus affected during  11 roughly equal            3 mostly right                    2 mostly right
+  noise                      2 mostly right              3 entirely right                  2 entirely right
+                             3 entirely right            17 quieter                        13 quieter
+Is tinnitus affected after   17 quieter                  5 unchanged                       10 unchanged
+  noise                      8 unchanged                 4 louder                          1 louder
+                             2 louder                    4 quieter                         2 quieter
+Related health conditions    6 quieter                   12 unchanged                      17 unchanged
+                             17 unchanged                10 louder                         5 louder
+                             4 louder                    1 acoustic neuroma, and 1         2 antibiotics or other meds, 1 blast injury,
+                             None                        intracranial hypertension         1 acoustic neuroma
+
+No significant differences were shown by paired t-tests between sham and active conditions within each group separately in terms of days of listening missed
+(amplitude modulation p = 0.452; phase modulation p = 0.125; noise replacement p = 0.224), or by one-way ANOVAs between all 3 groups in either active (p = 0.068)
+or sham (p = 0.710) (Table 3).
+
+                                                                         8
+E.A. Yukhnovich et al.                                                                                                                                           Hearing Research 464 (2025) 109335
+
+Table 3                                                                                    indicated having pure tone or broadband tinnitus (Table 5).
+Days missed & average listening times.
+                                                                                           5.3. Noise replacement results
+             Amplitude             Phase modulation  Noise replacement
+             modulation                                                                        The average outcome measure scores at each time point are shown in
+                                                                                           Table 6.
+             Active        Sham    Active   Sham     Active       Sham
+                                                                                               There was a significant difference between start and end NRS loud
+Days         5.56          6.22    3.50     4.85     4.54         5.75                     ness scores in the sham condition (t(23)=2.135, p = 0.044), which was
+  missed     (5.91)        (5.61)  (4.13)   (4.51)   (3.51)       (5.05)                   not seen in the active condition (t(23)=- 0.89, p = 0.381). However, this
+             87.70         88.65   66.47    65.23    54.01        54.91                    was not sustained throughout the washout period. THI scores reduced by
+Average      (82.44)       (4.93)  (36.51)  (33.46)  (17.60)      (21.38)                  6 points in the sham condition and were unchanged in the active con
+  listening                                                                                dition. The difference between the start - end scores in active compared
+  times                                                                                    to sham was also significant (t(23)=- 2.14, p = 0.043). No other mea
+                                                                                           sure showed significant differences between start and end, or in the
+No significant differences were shown by paired t-tests between mean durations             differences scores between active and sham.
+of listening within groups (amplitude p = 0.730; phase p = 0.734; noise
+replacement p = 0.599). No significant differences were shown by one-way                   6. Discussion
+ANOVAs between groups in either the active (p = 0.118) or sham condition
+(Kruskall-Wallis p = 0.092). In all conditions, the data for average listening                 Overall, our novel cross-frequency de-correlating stimulus modula
+amounts was skewed to the left, showing that most people listened for around 1             tion had a significant effect in reducing tinnitus loudness over 6 weeks of
+hour a day (note, the sound files sent to participants were 60 min long).                  regular listening, in a broad and unselected real-world tinnitus popu
+                                                                                           lation, and this reduction persisted for at least a further 3 weeks of no
+(Fig 2).                                                                                   listening. This was not seen in the sham condition, which indicates a
+                                                                                           specific effect of the novel modulation. Furthermore, our results indicate
+5.2. Combined amplitude & phase modulation results                                         an overall positive influence of this stimulus on reaction to tinnitus
+                                                                                           presence through the mean reduction in THI and TFI during both active
+    The two novel de-correlating modulation conditions (amplitude and                      and sham conditions, and through dropout rates between starting and
+phase modulations) showed very similar results, so they were pooled for                    completing the regular listening phases of the trial being favourable for
+analysis (Table 4). While the starting NRS loudness score was on average                   an online study. Unexpectedly, the noise replacement stimulus modu
+higher at the beginning of the active condition than the sham condition,                   lation showed significant tinnitus loudness reduction in the sham but not
+they were not significantly different (p = 0.078).                                         active condition, but this reduction was not sustained during the
+                                                                                           washout period.
+    The primary outcome measure, NRS loudness score, was significantly
+reduced in the active condition (t(52)=2.59, p = 0.012; d(repeated                             The method in the current study allows for a more inclusive treat
+measures)=0.51) but not in the sham (t(52)=0.106, p = 0.916) (Fig 5).                      ment than existing sound therapy approaches. Many previously
+Moreover, the difference between start and end scores (start score ­ end                   mentioned methods have been aimed towards tonal tinnitus, whereas in
+score = difference) in active were significantly different compared to                     this study, the effects apply both to tonal and noise tinnitus types, and
+sham (t(52) =2.26, p = 0.028) (Fig 6), which was even more evident for                     regardless of the underlying cause of tinnitus (Adamchic et al., 2017;
+the difference between start and end-of-washout-period scores in active                    Stein et al., 2016, 2021). Additionally, many approaches require regular
+compared to sham (t(52) =2.61, p = 0.012). There was a trend towards a                     visits and possibly extensive counselling, which can present a language
+further reduction between the start and end of the washout period                          barrier (Vieira et al., 2011), increase cost, and limit availability of
+following the active condition. These differences were also significant in                 treatment only to specialist centres. This also excludes people who
+the amplitude modulation group by itself (t(26)=2.11, p = 0.045). Note                     cannot easily travel or take time away from their daily activities. For
+that the group receiving sham treatment second started from a baseline                     example, trigeminal nerve stimulation required clinic visits every 2
+corresponding to the residual effect of active treatment (Fig 7). THI and                  weeks while others required extensive initial testing and/or weekly
+TFI scores significantly reduced in both active (THI: t(52)=3.40, p =                      counselling meetings (Hamilton and al., 2016; Jones et al., 2023; Krick
+0.001; TFI: t(52)=2.99, p = 0.004) and sham conditions (THI: t(52)=                        et al., 2015; Lee et al., 2024). Therefore, the pure online therapy would
+2.77, p = 0.008; TFI: t(52)=2.45, p = 0.018), but there was no signifi                     be much more accessible to adults from a variety of working and na
+cant difference between the reduction following active vs. sham                            tionality backgrounds, geographical locations, and mobility restrictions.
+listening. HQ (Khalfa et al., 2002) scores did not significantly change,
+which showed that listening to the treatment sounds did not affect                             The majority of existing sound therapies need input of specialists to
+general sound loudness tolerance of the participants. The results were                     carry out precise tinnitus matching (e.g. (Adamchic et al., 2017; Pede
+similar for different hearing profiles and whether the participants                        monte et al., 2014)). In the current study, the tinnitus tone and hearing
+                                                                                           slope matching was entirely unsupervised, and while participants chose
+Table 4                                                                                    a frequency that best matched their tinnitus, this was a subjective pro
+Mean and (SD) of each measure at every time point of the experiment in the                 cess without expert supervision and therefore it is not possible to know
+combined sample.                                                                           whether or not tinnitus frequency matching was accurate. Therefore any
+                                                                                           resulting inaccuracies might have, if anything, reduced the effect sizes
+             NRS loudness  THI              HQ               TFI                           seen in the data. However, research shows that self-guided `multiple
+                                                                                           choice method', which was comparable to our matching process, has
+A_Start      6.17 (1.89)   42.42 (24.04)    14.23 (7.41)     45.68 (21.69)                 similar reliability compared to a more conventional `method of adjust
+A_End        5.70 (1.88)   37.09 (22.28)    14.25 (8.00)     40.82 (19.97)                 ment' (Santacruz et al., 2023). `Model of adjustment' method had high
+A_WP         5.62 (2.16)   38.98 (24.25)    14.58 (6.57)     42.05 (21.10)                 test-retest reliability and participant pitch-match satisfaction (Neff et al.,
+S_Start      5.83 (1.84)   43.66 (22.76)    14.25 (6.83)     46.71 (18.61)                 2019). Additionally, one study concluded that pitch matching in a lab
+S_End        5.81 (1.59)   38.91 (21.77)    13.81 (7.70)     42.20 (20.29)                 and at home produced similar results (however, the method in this study
+S_WP         6.00 (2.09)   38.68 (22.87)    14.72 (8.08)     42.24 (21.79)                 was different to one used in our current study) (Lentz Jennifer and Liu,
+                                                                                           2025). Our significant findings show that the approximate, online pro
+In the time point titles, `Start' refers to the beginning of a listening period, `End'     cess can be successful despite any inherent inaccuracies in tinnitus
+refers to the end of a listening period, and `WP' refers to the end of the washout
+period in which participants did not have any daily listening. The prefix `A'
+indicates that the title refers to the active condition, whereas the prefix `S' refers
+to the sham condition. For example, S_WP means the end of the washout period
+after the sham condition. NRS = numerical rating scale (0­10). HQ = Hyper
+acusis Questionnaire.
+
+                                                                                        9
+E.A. Yukhnovich et al.                                                           Hearing Research 464 (2025) 109335
+
+Fig. 5. NRS loudness score change from the original score at different timepoints. Relative change in mean loudness scores from a baseline (0.0) at the start of each
+type of condition is shown. Error bars indicate standard error of the mean.
+
+matching, and therefore proved to be a strength of the procedure.                daily 20 min active auditory discrimination task. While the current
+Subsequent improvements in the unsupervised tinnitus frequency                   study lasted longer, the effects were somewhat stronger and the listening
+matching process will be carried out in order to increase the efficacy of        could be done alongside other activities, thus likely having much greater
+the method.                                                                      acceptability and long-term utilisation. The next shortest study was the
+                                                                                 10-week trigeminal nerve stimulation experiment (Hamilton and al.,
+    While it is not possible to directly assess why the THI and TFI scores       2016), in which an equivalent of 0.62 on a 10-point scale loudness
+reduced both in sham and in active conditions of the de-correlating              reduction occurred. This is a slightly larger effect on loudness than in the
+stimuli in our study by similar margins regardless of condition order            current study but was not measured against a sham/placebo group, and
+(around 5 points in each questionnaire in each condition), the THI and           requires frequent visits, placements of electrodes on the tongue, and
+TFI improvement may perhaps indicate an overall positive effect of               expensive devices. The 12-week CR neuromodulation study in which
+participating in sound therapy. This is important for the feasibility of         participants listened to sounds for a similar amount of time a week to the
+automated online studies, as it indicates that there is a net beneficial         current study resulted in a non-significant reduction of 0.45 on a
+placebo effect, even without direct communication with a researcher or           10-point scale, which is less effective than our stimulus. The Levo®
+clinician. There is also a possibility that despite the different funda          system study also lasted 12 weeks, with many hours of listening per
+mental frequencies of pre- and post-dip stimuli, the slow rhythmicity of         night, and did lead to a reduction of 1.00 (absolute reduction, not
+the off- and on-ramps within the structure of the stimuli could have             compared against sham treatment), however this system is also largely
+produced a slow beat percept. This percept may have contributed to               inaccessible due to its high price. The TMNMT study lasted 12 months
+wards an overall relaxing effect of the stimuli, and partially underlie the      and showed an impressive reduction of 25 % by the end of the experi
+changes in THI and TFI scores.                                                   ment. However, it is not certain whether this is reliable, as the study had
+                                                                                 8 participants per group. Additionally, a larger cohort study lasting 3
+    However, the THI or TFI improvement effect was not found in                  months did not see a significant reduction in loudness, therefore it would
+response to the active noise replacement stimuli. This sound therapy             be preferable to carry out further longitudinal experiments into this
+condition also had shortest daily listening amounts and had more par             method. Overall, at this stage of testing, our de-correlating stimulus
+ticipants who had self-perceived hearing difficulty or struggled to hear         shows similarly, or more, efficacious results than the previous studies, is
+in daily conversations (indicating higher possible amounts of hidden             based on larger numbers and more rigorous control groups than most
+hearing loss), which may point towards either to being less pleasant than        comparable methods, and is unique in its complete non-reliance on
+other conditions, requiring longer daily listening to have a therapeutic         clinician or researcher-involved methods or bespoke hardware, thus
+effect, or being limited in the amount of therapeutic effect that could be       giving instant and almost unlimited scale of delivery. With further
+gained due to the modulations of informational content not being                 research, we will aim to increase clinical efficacy of the loudness
+transmitted to the central auditory system by the potentially more               reduction effects of the de-correlating stimulus sound therapy method.
+dysfunctional peripheral hearing system. Alternatively, a potential
+explanation for the `sham' condition having more therapeutic effect                  A minor limitation of the study is that the length of listening each day
+could be that attention was brought to the stimulus frequency region             was not controlled. The amplitude modulation showed the highest
+that was missing informational content, thereby increasing its weighting         amount of listening compared to other types. However, potentially
+or precision in auditory processing. Thus, the `active' version would            higher amounts of average listening may indicate better tolerability of
+cause overweighting of tinnitus-frequencies, and the `sham' version              amplitude modulation compared to phase modulation. Nevertheless, the
+increased weighting of non-tinnitus frequencies.                                 data indicated that the majority of participants listened for around 1
+                                                                                 hour a day. Furthermore, it is important for the sounds to be beneficial at
+    While the overall experiment in the current study was 18 weeks, the          a realistic range of daily listening amounts as this would allow for
+active condition only lasted 6 weeks. This is one of the shorter time            greater world applicability, due to varying everyday responsibilities and
+periods in which a longitudinal sound therapy experiment has taken               lifestyles.
+place, and in this context the magnitude of tinnitus loudness reduction of
+0.47 on a 10-point scale from the de-correlating sound stimuli is rela               There was a reasonable retention rate for online studies of sound
+tively large. Aside from an ADT study, which lasted 30 days                      therapy. This study took 18 weeks overall, with 12 weeks of involving
+(Rodríguez-Leo´n et al., 2022), other studies were all considerably longer       listening for 60 min on average. In previous studies where 6­12 weeks
+than ours, lasting from 10 weeks to 12 months. The ADT study showed a            were dedicated to tinnitus therapy, the dropout rate was between 14 %
+non-significant effect on loudness (0.5 on a 10-point scale), following a
+
+                                                                             10
+E.A. Yukhnovich et al.                                                            Hearing Research 464 (2025) 109335
+
+Fig. 6. Individual loudness change in active and sham (amplitude and phase modulation) stimulus conditions. A) represents the difference (end ­ start = difference)
+in NRS loudness score of each participant who completed 6 weeks of listening to the active version of amplitude/phase modulation. B) represents the difference in
+NRS loudness score of each participant who completed 6 weeks of listening to the sham version of the de-correlating stimulus.
+
+and 28 % (Stein et al., 2016; Conlon et al., 2020; Jones et al., 2023). The       Therefore, it is possible that some carry-over effects were present in the
+current study has a slightly higher dropout rate (Fig 2), but the study was       sham condition results when it came second after the active condition. It
+completely online whereas in the other 3 examples, participants needed            may therefore be the case that considerably larger reductions naturally
+to come in for initial assessments, which potentially motivated them to           occur on prolonged listening to the active de-correlating sound therapy,
+be more determined to finish the study. In the current study, the ma              and for a longer period of time than measured in this study.
+jority of dropouts occurred soon after receiving the first sound file. After
+this, the retention rate was very high.                                               Additionally, there are many free parameters of both the carrier
+                                                                                  sounds as well as the de-correlating modulation itself that can be
+    Our next steps will be to improve tolerability and pleasantness of the        modified to potentially increase efficacy, and we have tested only one
+sounds, and to investigate how we can maximise the tinnitus loudness              parameter combination so far. These include the range, and rate of
+reduction. For example, further research is needed to understand how              change of modulation rates for either type of modulation (amplitude and
+long the effects can last after finishing the listening periods, and what is      phase), and also the bandwidth in which the modulation is applied. For
+the optimal length of listening both daily and for the overall treatment          instance, as well as tonotopy (organisation by frequency), the central
+course. There is presently no evidence that tinnitus loudness reduction           auditory pathway is organised by periodotopy (temporal modulation
+reaches a plateau within the 6 weeks listening period we tested, whilst           rate), in which it is sensitive to modulations up to at least 256 Hz
+there is evidence that the effect endures for at least 3 weeks after that.        (Brewer and Barton, 2016), contrasting with maximal rates of less than
+Our results showed that at the end of the three week washout period               10 Hz we used. Therefore, large proportions of neuronal assemblies in
+after a listening period to the active condition of the de-correlating            the auditory pathway might be targeted, which our present imple
+stimulus, the mean NRS loudness score continued to change.                        mentation was not able to recruit. Additionally, if the phase modulation
+
+                                                                              11
+E.A. Yukhnovich et al.                                                                      Hearing Research 464 (2025) 109335
+
+Fig. 7. Raw NRS loudness score change at different timepoints. The mean absolute scores collected from participants who either started with the active condition, or
+those who started with the sham condition. Error bars indicate standard error of the mean.
+
+Table 5                                                                                         Furthermore, while synthetic harmonic complex sounds (with little
+Tonal vs non-tonal NRS loudness results.                                                    intrinsic listening appeal) were used for this experiment, they do not
+                                                                                            necessarily need to be the modulation carrier. The modulation could be
+                        Tonal (N = 20)        Non-tonal (N = 33)                            applied across a range of natural or synthetic sounds that have sufficient
+                                                                                            high-frequency content. Importantly, the reaction and potential benefit
+A_Start                 6.15 (1.95)           6.18 (1.88)                                   from the sound sequences used in sound therapy can be individualistic,
+A_End                   5.55 (1.88)           5.78 (1.90)                                   depending on the emotions elicited by the sounds (Searchfield et al.,
+A_WP                    5.60 (2.19)           5.63 (2.18)                                   2017). Therefore, a potential next step could be to apply the modulation
+S_Start                 5.60 (1.76)           5.97 (1.90)                                   to already well-tolerated music/sound sequences that the participants
+S_End                   5.50 (1.61)           6.00 (1.58)                                   enjoy, thus allowing for an even more personalised approach.
+S_WP                    5.75 (1.92)           6.15 (2.20)
+                                                                                                Automated online sound therapy is feasible for longitudinal tinnitus
+In the time point titles, `Start' refers to the beginning of a listening period, `End'      treatment studies. Moreover, our novel cross-frequency de-correlating
+refers to the end of a listening period, and `WP' refers to the end of the washout          amplitude and phase-modulated sounds show promise in reducing
+period in which participants did not have any daily listening. The prefix `A'               perceived tinnitus loudness. Once optimal parameters and efficacy are
+indicates that the title refers to the active condition, whereas the prefix `S' refers      determined, the treatment can be made freely available on an unlimited
+to the sham condition.                                                                      scale to the tinnitus community, and iteratively improved by the low-
+                                                                                            cost-low-burden running of large automated online randomised
+Table 6                                                                                     controlled trials.
+Mean and SD of each measure at every time point of the experiment in the noise
+replacement sample.                                                                         CRediT authorship contribution statement
+
+         NRS Loudness   THI               HQ            TFI                                     E.A. Yukhnovich: Writing ­ review & editing, Writing ­ original
+                                                                                            draft, Visualization, Project administration, Methodology, Investigation,
+A_Start  5.50 (2.21)    29.17 (14.65)     15.83 (8.89)  39.35 (20.72)                       Formal analysis, Data curation. S. Harrison: Conceptualization. N.
+A_End    5.50 (2.49)    30.67 (16.11)     16.50 (8.77)  39.77 (21.97)                       Wray: Writing ­ review & editing, Conceptualization. K. Alter: Writing
+WP_A     5.38 (2.57)    30.17 (16.39)     16.29 (9.41)  40.85 (24.86)                       ­ review & editing, Supervision, Project administration, Methodology,
+S_Start  5.33 (2.43)    36.42 (20.29)     16.54 (7.71)  43.73 (24.13)                       Investigation, Formal analysis, Data curation. W. Sedley: Writing ­ re
+S_End    5.08 (2.67)    30.83 (18.67)     16.17 (8.64)  38.23 (24.51)                       view & editing, Writing ­ original draft, Visualization, Validation, Su
+WP_S     5.46 (2.64)    29.17 (17.42)     16.13 (8.91)  39.95 (22.53)                       pervision, Software, Resources, Project administration, Methodology,
+                                                                                            Investigation, Funding acquisition, Formal analysis, Data curation,
+In the time point titles, `Start' refers to the beginning of a listening period, `End'      Conceptualization.
+refers to the end of a listening period, and `WP' refers to the end of the washout
+period in which participants did not have any daily listening. The prefix `A'               Declaration of competing interest
+indicates that the title refers to the active condition, whereas the prefix `S' refers
+to the sham condition.                                                                          The authors declare no competing interests.
+
+is considered a frequency modulation, then the limit of modulation need                     Acknowledgements
+not stop at 2, which constitutes a very small frequency modulation, but
+could go orders of magnitude higher. Furthermore, amplitude and phase                           This work was supported by the Royal National Institute for Deaf
+modulations are not mutually exclusive, but could be combined, with                         People, the Masonic Charitable Foundation (United Kingdom), the
+either the same modulation ripple, or separate orthogonal ones.                             Wellcome Trust, the National Institute for Health Research, and the
+Therefore, by systematically exploring these parameters, we may be able                     Academy of Medical Sciences.
+to greatly increase the efficacy of our novel stimulus. Neuroimaging
+studies will likely be necessary to determine the mechanisms through
+which the de-correlating sound stimulus may influence tinnitus loud
+ness. Iterations of such studies may help determine which parameters
+are crucial in improving clinical relevance of this sound therapy
+stimulus.
+
+                                                                                        12
+E.A. Yukhnovich et al.                                                                                                                                                   Hearing Research 464 (2025) 109335
+
+Data availability                                                                                  Neff, P., et al., 2019. Comparing three established methods for tinnitus pitch matching
+                                                                                                        with respect to reliability, matching duration, and subjective satisfaction. Trends.
+    Data is available using the following DOI:https://doi.                                              Hear. 23, 2331216519887247.
+org/10.25405/data.ncl.27109693.
+                                                                                                   Newman, C.W., Jacobson, G.P., Spitzer, J.B., 1996a. Development of the Tinnitus
+References                                                                                              Handicap Inventory. Arch. Otolaryngol.­Head Neck Surg. 122 (2), 143­148.
+
+Adamchic, I., et al., 2017. Acute effects and after-effects of acoustic coordinated reset          Newman, C.W., Jacobson, G.P., Spitzer, J.B., 1996b. Development of the tinnitus
+     neuromodulation in patients with chronic subjective tinnitus. NeuroImage 15,                       handicap inventory. Arch. Otolaryngol. Head Neck Surg. 122 (2), 143­148.
+     541­558.
+                                                                                                   Noren~a, A.J., 2015. Revisiting the Cochlear and Central mechanisms of tinnitus and
+Adjamian, P., Sereda, M., Hall, D.A., 2009. The mechanisms of tinnitus: perspectives                    therapeutic approaches. Audiol. Neurotol. 20 (suppl 1), 53­59. Suppl. 1.
+     from human functional neuroimaging. Hear. Res. 253 (1), 15­31.
+                                                                                                   Noren~a, A.J., Eggermont, J.J., 2005. Enriched acoustic environment after noise trauma
+Angeloni, C.F., et al., 2023. Dynamics of cortical contrast adaptation predict perception               reduces hearing loss and prevents cortical map reorganization. J. Neurosci. 25 (3),
+     of signals in noise. Nat. Commun. 14 (1), 4817.                                                    699­705.
+
+Auerbach, B.D., Rodrigues, P.V., Salvi, R.J., 2014. Central gain control in tinnitus and           Okamoto, H., et al., 2010. Listening to tailor-made notched music reduces tinnitus
+     hyperacusis. Front. Neurol. 5 (206).                                                               loudness and tinnitus-related auditory cortex activity. Proc. Natl. Acad. Sci. 107 (3),
+                                                                                                        1207­1210.
+Brewer, A.A., Barton, B., 2016. Maps of the auditory cortex. Annu Rev. Neurosci. 39,
+     385­407.                                                                                      Pantev, C., Okamoto, H., Teismann, H., 2012. Music-induced cortical plasticity and
+                                                                                                        lateral inhibition in the human auditory cortex as foundations for tonal tinnitus
+Carmody, N., Eikelboom, R.H., Tegg-Quinn, S., 2023. Seeking help for tinnitus and                       treatment. Front. Syst. Neurosci. 6.
+     satisfaction with healthcare providers including diagnosis, clinical services, and
+     treatment: a scoping review. Eval. Health Prof. 46 (2), 170­193.                              Pedemonte, M., et al., 2014. The impact of sound on electroencephalographic waves
+                                                                                                        during sleep in patients suffering from tinnitus. Sleep. Sci. 7 (3), 143­151.
+Conlon, B., et al., 2020. Bimodal neuromodulation combining sound and tongue
+     stimulation reduces tinnitus symptoms in a large randomized clinical study. Sci.              Roberts, L.E., Salvi, R., 2019. Overview: hearing loss, tinnitus, hyperacusis, and the role
+     Transl. Med. 12 (564), eabb2830.                                                                   of central gain. Neuroscience 407, 1­7.
+
+Eggermont, J.J., 2003. Central tinnitus. Auris Nasus Larynx 30, 7­12.                              Rodríguez-Leo´n, I.G., et al., 2022. Effect of auditory discrimination therapy on
+Eggermont, J.J., Tass, P.A., 2015. Maladaptive neural synchrony in tinnitus: origin and                 attentional processes of tinnitus patients. Sensors 22. https://doi.org/10.3390/
+                                                                                                        s22030937.
+     restoration. Front. Neurol. 6.
+Folmer, R.L., Carroll, J.R., 2006. Long-term effectiveness of ear-level devices for tinnitus.      Santacruz, J.L., de Kleine, E., van Dijk, P., 2023. Comparison between two self-guided
+                                                                                                        tinnitus pitch matching methods. Front. Aging Neurosci. 15.
+     Otolaryngol.­Head Neck Surg. 134 (1), 132­137.
+Guerrero, D., et al., 2021. Towards a measure for characterizing the informational                 Searchfield, G.D., Durai, M., Linford, T., 2017. A State-of-the-art review: personalization
+                                                                                                        of Tinnitus sound therapy. Front. Psychol. 8.
+     content of audio signals and the relation between complexity and auditory encoding.
+     Entropy (Basel) (12), 23.                                                                     Searchfield, G.D., Searchfield, G.D., 2021. Sense and Sensibility: a review of the
+Haider, H.F., et al., 2018. Pathophysiology of subjective tinnitus: triggers and                        behavioral neuroscience of Tinnitus Sound therapy and a new typology. In: Zhang, J.
+     maintenance. Front. Neurosci. 12, 866.                                                             (Ed.), The Behavioral Neuroscience of Tinnitus. Springer International Publishing:
+Hall, D.A., et al., 2022. Systematic evaluation of the T30 neurostimulator treatment for                Cham, pp. 213­247.
+     tinnitus: a double-blind randomised placebo-controlled trial with open-label
+     extension. Brain Sci. 12. https://doi.org/10.3390/brainsci12030317.                           Sedley, W., et al., 2016. An integrative tinnitus model based on sensory precision.
+Hamilton, C., et al., 2016. An investigation of feasibility and safety of Bi-modal                      Trends. Neurosci. 39 (12), 799­812.
+     stimulation for the treatment of tinnitus: an open-label pilot study. Technol. Neural
+     Interface 19 (8), 832­837.                                                                    Sedley, W., 2019. Tinnitus: does Gain explain? Neuroscience 407, 213­228.
+Herraiz, C., et al., 2010. Auditory discrimination training for tinnitus treatment: the            Sedley, W., et al., 2019. Exposing pathological sensory predictions in tinnitus using
+     effect of different paradigms. Eur. Arch. Oto-Rhino-Laryngol. 267 (7), 1067­1074.
+Hoare, D.J., Kowalkowski, V.L., Hall, D.A., 2012. Effects of frequency discrimination                   auditory intensity deviant evoked responses. J. Neurosci. 1308­1319.
+     training on tinnitus: results from two randomised controlled trials. J. Assoc. Res.           Shore, S.E., Roberts, L.E., Langguth, B., 2016. Maladaptive plasticity in tinnitus --
+     Otolaryngol. 13 (4), 543­559.
+Hoare, D.J., Stacey, P.C., Hall, D.A., 2010. The efficacy of auditory perceptual training               triggers, mechanisms and treatment. Nat. Rev. Neurol. 12 (3), 150­160.
+     for tinnitus: a systematic review. Ann. Behav. Med. 40 (3), 313­324.                          Shore, S.E., Wu, C., 2019. Mechanisms of noise-induced tinnitus: insights from Cellular
+Hullfish, J., Sedley, W., Vanneste, S., 2019. Prediction and perception: insights for (and
+     from) tinnitus. Neurosci. Biobehav. Rev. 102, 1­12.                                                Studies. Neuron 103 (1), 8­20.
+Husain, F.T., et al., 2018. Expectations for tinnitus treatment and outcomes: a survey             Stegeman, I., et al., 2021. Tinnitus treatment by vagus nerve stimulation: a systematic
+     study of audiologists and patients. J. Am. Acad. Audiol. 29 (4), 313­336.
+Jastreboff, P.J., Hazell, J.W., 1993. A neurophysiological approach to tinnitus: clinical               review. PLoS. One 16 (3), e0247221.
+     implications. Br. J. Audiol. 27 (1), 7­17.                                                    Stein, A., et al., 2016. Clinical trial on tonal tinnitus with tailor-made notched music
+Jones, G.R., et al., 2023. Reversing synchronized brain circuits using targeted auditory-
+     somatosensory stimulation to treat phantom percepts: a randomized clinical trial.                  training. BMC. Neurol. 16 (1), 38.
+     JAMa Netw. Open. 6 (6), e2315914. -e2315914.                                                  Tass, P.A., Hauptmann, C., 2009. Anti-kindling achieved by stimulation targeting slow
+Khalfa, S., et al., 2002. Psychometric normalization of a hyperacusis questionnaire. ORL.
+     J. Otorhinolaryngol. Relat. Spec. 64 (6), 436­442.                                                 synaptic dynamics. Restor. Neurol. Neurosci. 27 (6), 589­609.
+Krick, C.M., et al., 2015. Cortical reorganization in recent-onset tinnitus patients by the        Theodoroff Sarah, M., et al., 2017. Randomized controlled trial of a novel device for
+     Heidelberg model of music therapy. Front. Neurosci. 9.
+Lee, D., et al., 2024. The effectiveness of microcurrent stimulation combined with sound                tinnitus sound therapy during sleep. Am. J. Audiol. 26 (4), 543­554.
+     therapy for tinnitus relief: a preliminary study. Audiol. Res. 14, 139­150. https://          Tinnitus: assessment and management. NICE guideline NG155, 2020.
+     doi.org/10.3390/audiolres14010012.                                                            Tyler, R., et al., 2017. Vagus nerve stimulation paired with tones for the treatment of
+Lentz Jennifer, J., Liu, Y., 2025. Estimating the tinnitus spectrum: a comparison between
+     At-home and laboratory measurements. Am. J. Audiol. 34 (1), 187­198.                               tinnitus: a prospective randomized double-blind controlled pilot study in humans.
+Meikle, M.B., et al., 2012. The tinnitus functional index: development of a new clinical                Sci. Rep. 7 (1), 11960.
+     measure for chronic, intrusive tinnitus. Ear Hear. 33 (2), 153­176.                           Vanneste, S., et al., 2013. Does enriched acoustic environment in humans abolish chronic
+                                                                                                        tinnitus clinically and electrophysiologically? A double blind placebo controlled
+                                                                                                        study. Hear. Res. 296, 141­148.
+                                                                                                   Vernon, J., 1976. The loudness (?) of tinnitus. Hear Speech Action 44, 17­19.
+                                                                                                   Vernon, J., Schleuning, A., 1978. Tinnitus: a new management. Laryngoscope 88 (3),
+                                                                                                        413­419.
+                                                                                                   Vieira, D.T., et al., 2011. A multi-centre study on the long-term benefits of tinnitus
+                                                                                                        management using Neuromonics Tinnitus Treatment. Int. Tinnitus. J. 16 (2),
+                                                                                                        111­117.
+                                                                                                   Wang, H., et al., 2020a. The state of the art of sound therapy for subjective tinnitus in
+                                                                                                        adults. Ther. Adv. Chronic. Dis. 11, 2040622320956426.
+                                                                                                   Wang, H., et al., 2020b. The state of the art of sound therapy for subjective tinnitus in
+                                                                                                        adults. Ther. Adv. Chronic. Dis. 11, 2040622320956426.
+                                                                                                   Yukhnovich, E.A., Alter, K., Sedley, W., 2023. Nuances in intensity deviant asymmetric
+                                                                                                        responses as a biomarker for tinnitus. PLoS. One 18 (8), e0289062.
+
+                                                                                               13
+

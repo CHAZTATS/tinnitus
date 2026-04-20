@@ -16,7 +16,6 @@ import {
   IonHeader,
   IonItem,
   IonLabel,
-  IonList,
   IonRange,
   IonSelect,
   IonSelectOption,
@@ -27,91 +26,13 @@ import {
 type ModulationType = 'amp' | 'phase';
 type RangeValue = number | { lower: number; upper: number } | null;
 
-interface SessionEntry {
-  start: number;
-  end: number;
-  duration: number;
-}
-
-interface DaySummary {
-  day: string;
-  durationMs: number;
-}
-
 interface SavedSettings {
   freqIndex: number;
+  customFreq: number | null;
   volume: number;
   hearingProfile: string;
   modType: ModulationType;
   pan: number;
-}
-
-class SessionTracker {
-  private readonly storageKey = 'tinnitus-sessions';
-  private currentSessionStart: number | null = null;
-
-  public getSessions(): SessionEntry[] {
-    const data = localStorage.getItem(this.storageKey);
-    if (!data) {
-      return [];
-    }
-
-    try {
-      const parsed = JSON.parse(data) as SessionEntry[];
-      return Array.isArray(parsed) ? parsed : [];
-    } catch {
-      return [];
-    }
-  }
-
-  private saveSessions(sessions: SessionEntry[]): void {
-    localStorage.setItem(this.storageKey, JSON.stringify(sessions));
-  }
-
-  public startSession(): void {
-    this.currentSessionStart = Date.now();
-  }
-
-  public endSession(): void {
-    if (!this.currentSessionStart) {
-      return;
-    }
-
-    const end = Date.now();
-    const durationMs = end - this.currentSessionStart;
-    const durationMinutes = durationMs / 60000;
-
-    if (durationMinutes >= 1) {
-      const sessions = this.getSessions();
-      sessions.push({
-        start: this.currentSessionStart,
-        end,
-        duration: durationMs,
-      });
-      this.saveSessions(sessions);
-    }
-
-    this.currentSessionStart = null;
-  }
-
-  public getSessionsByDay(): DaySummary[] {
-    const sessions = this.getSessions();
-    const byDay = new Map<string, number>();
-
-    for (const session of sessions) {
-      const day = new Date(session.start).toLocaleDateString('fr-FR', {
-        weekday: 'short',
-        day: 'numeric',
-        month: 'short',
-      });
-      byDay.set(day, (byDay.get(day) ?? 0) + session.duration);
-    }
-
-    return Array.from(byDay.entries()).map(([day, durationMs]) => ({
-      day,
-      durationMs,
-    }));
-  }
 }
 
 class TinnitusTherapyGenerator {
@@ -122,7 +43,7 @@ class TinnitusTherapyGenerator {
 
   private isPlaying = false;
   private nextScheduleTime = 0;
-  private schedulerTimer: ReturnType<typeof setTimeout> | null = null;
+  private schedulerInterval: ReturnType<typeof setInterval> | null = null;
 
   private readonly sampleRate = 44100;
   private readonly stimulusDuration = 4;
@@ -133,6 +54,8 @@ class TinnitusTherapyGenerator {
   private readonly smrCycleDuration = 8;
   private readonly depth = 1;
   private readonly loud = 0.1;
+  private readonly scheduleAheadTime = 8;
+  private readonly schedulerLookaheadMs = 1000;
 
   private readonly fbands: [number, number][];
   private readonly standardBandOffset = 4;
@@ -231,16 +154,14 @@ class TinnitusTherapyGenerator {
       this.audioContext.currentTime,
     );
     this.setPan(this.pan);
-    this.scheduleNextStimulus();
+    this.runScheduler();
+    this.startSchedulerLoop();
   }
 
   public stop(): void {
     this.isPlaying = false;
 
-    if (this.schedulerTimer) {
-      clearTimeout(this.schedulerTimer);
-      this.schedulerTimer = null;
-    }
+    this.stopSchedulerLoop();
 
     if (this.masterGain && this.audioContext) {
       this.masterGain.gain.setValueAtTime(0, this.audioContext.currentTime);
@@ -485,7 +406,38 @@ class TinnitusTherapyGenerator {
     return buffer;
   }
 
-  private scheduleNextStimulus(): void {
+  private startSchedulerLoop(): void {
+    this.stopSchedulerLoop();
+
+    this.schedulerInterval = setInterval(() => {
+      this.runScheduler();
+    }, this.schedulerLookaheadMs);
+  }
+
+  private stopSchedulerLoop(): void {
+    if (this.schedulerInterval) {
+      clearInterval(this.schedulerInterval);
+      this.schedulerInterval = null;
+    }
+  }
+
+  private runScheduler(): void {
+    if (!this.audioContext || !this.masterGain || !this.isPlaying) {
+      return;
+    }
+
+    const currentTime = this.audioContext.currentTime;
+    if (this.nextScheduleTime < currentTime) {
+      this.nextScheduleTime = currentTime;
+    }
+
+    while (this.nextScheduleTime < currentTime + this.scheduleAheadTime) {
+      this.scheduleStimulusAt(this.nextScheduleTime);
+      this.nextScheduleTime += this.stimulusDuration;
+    }
+  }
+
+  private scheduleStimulusAt(startTime: number): void {
     if (!this.audioContext || !this.masterGain || !this.isPlaying) {
       return;
     }
@@ -494,17 +446,7 @@ class TinnitusTherapyGenerator {
     const source = this.audioContext.createBufferSource();
     source.buffer = buffer;
     source.connect(this.masterGain);
-
-    const currentTime = this.audioContext.currentTime;
-    const startTime = Math.max(currentTime, this.nextScheduleTime);
     source.start(startTime);
-    this.nextScheduleTime = startTime + this.stimulusDuration;
-
-    const scheduleAhead = (this.stimulusDuration - 0.5) * 1000;
-    this.schedulerTimer = setTimeout(
-      () => this.scheduleNextStimulus(),
-      scheduleAhead,
-    );
   }
 }
 
@@ -530,7 +472,6 @@ const SETTINGS_KEY = 'tinnitus-settings';
     IonSelectOption,
     IonItem,
     IonLabel,
-    IonList,
   ],
 })
 export class HomePage implements AfterViewInit, OnDestroy {
@@ -547,6 +488,9 @@ export class HomePage implements AfterViewInit, OnDestroy {
     { label: 'Moderate hearing loss', value: '30' },
     { label: 'Severe hearing loss', value: '45' },
   ];
+  public readonly frequencyMin = 250;
+  public readonly frequencyMax = 16000;
+  public readonly frequencyStep = 10;
 
   public selectedFreqIndex = 12;
   public customFreq: number | null = null;
@@ -559,13 +503,10 @@ export class HomePage implements AfterViewInit, OnDestroy {
   public statusText = 'Ready to start';
   public elapsedSeconds = 0;
 
-  public historyDays: Array<{ day: string; durationLabel: string }> = [];
-  public totalHistoryLabel = '0 min';
   public diagnosticLogs: string[] = [];
   public diagnosticCopyStatus = '';
 
   private readonly generator = new TinnitusTherapyGenerator();
-  private readonly sessionTracker = new SessionTracker();
 
   private timerInterval: ReturnType<typeof setInterval> | null = null;
   private animationId: number | null = null;
@@ -585,7 +526,6 @@ export class HomePage implements AfterViewInit, OnDestroy {
 
   public constructor() {
     this.loadInitialSettings();
-    this.refreshHistory();
   }
 
   public ngAfterViewInit(): void {
@@ -638,15 +578,15 @@ export class HomePage implements AfterViewInit, OnDestroy {
   }
 
   public get selectedFrequencyLabel(): string {
-    if (this.customFreq) {
-      const suffix =
-        this.customFreq < 1000
-          ? ' (URL override - experimental)'
-          : ' (URL override)';
-      return `${this.formatFreq(this.customFreq)}${suffix}`;
+    if (this.customFreq !== null) {
+      return `${this.formatFreq(this.customFreq)} (fine tuned)`;
     }
 
     return this.formatFreq(this.frequencies[this.selectedFreqIndex]);
+  }
+
+  public get frequencySliderValue(): number {
+    return this.customFreq ?? this.frequencies[this.selectedFreqIndex];
   }
 
   public get panLabel(): string {
@@ -666,19 +606,37 @@ export class HomePage implements AfterViewInit, OnDestroy {
     return `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
   }
 
-  public get hasHistory(): boolean {
-    return this.historyDays.length > 0;
-  }
-
   public selectFrequency(index: number): void {
     this.selectedFreqIndex = index;
+    this.customFreq = null;
 
-    if (!this.customFreq) {
-      this.generator.tinnitusFreq = this.frequencies[index];
-      this.generator.previewTone(this.frequencies[index]);
-    }
+    this.generator.tinnitusFreq = this.frequencies[index];
+    this.generator.previewTone(this.frequencies[index]);
 
     this.persistSettings();
+  }
+
+  public onFrequencySliderChange(
+    event: CustomEvent<{ value: RangeValue }>,
+  ): void {
+    const rawFreq = this.extractRangeValue(
+      event.detail.value,
+      this.frequencySliderValue,
+    );
+    const boundedFreq = this.clampFrequency(rawFreq);
+    const snappedFreq = this.snapFrequencyToStep(boundedFreq);
+
+    this.customFreq = snappedFreq;
+    this.selectedFreqIndex = this.findClosestFrequencyIndex(snappedFreq);
+    this.generator.tinnitusFreq = snappedFreq;
+
+    this.persistSettings();
+  }
+
+  public onFrequencySliderCommit(): void {
+    if (this.customFreq !== null) {
+      this.generator.previewTone(this.customFreq);
+    }
   }
 
   public onPanChange(event: CustomEvent<{ value: RangeValue }>): void {
@@ -716,7 +674,6 @@ export class HomePage implements AfterViewInit, OnDestroy {
     this.generator.setPan(this.pan / 100);
 
     this.generator.start();
-    this.sessionTracker.startSession();
 
     this.isPlaying = true;
     this.statusText = 'Therapy in progress...';
@@ -746,11 +703,6 @@ export class HomePage implements AfterViewInit, OnDestroy {
     this.generator.stop();
     this.addDiagnostic('playback stop requested');
 
-    if (recordSession) {
-      this.sessionTracker.endSession();
-      this.refreshHistory();
-    }
-
     this.isPlaying = false;
     this.statusText = 'Stopped';
     this.stopTimer();
@@ -778,10 +730,17 @@ export class HomePage implements AfterViewInit, OnDestroy {
   }
 
   private startVisualizer(): void {
+    this.resizeCanvas();
+
     const canvas = this.visualizerRef?.nativeElement;
     const analyser = this.generator.getAnalyser();
     if (!canvas || !analyser) {
       return;
+    }
+
+    if (canvas.width === 0 || canvas.height === 0) {
+      canvas.width = Math.max(1, canvas.clientWidth || 300);
+      canvas.height = Math.max(1, canvas.clientHeight || 64);
     }
 
     const ctx = canvas.getContext('2d');
@@ -842,27 +801,6 @@ export class HomePage implements AfterViewInit, OnDestroy {
     canvas.height = canvas.offsetHeight;
   }
 
-  private refreshHistory(): void {
-    const byDay = this.sessionTracker.getSessionsByDay();
-    this.historyDays = byDay.map((day) => ({
-      day: day.day,
-      durationLabel: this.formatDuration(day.durationMs),
-    }));
-
-    const totalMs = byDay.reduce((acc, day) => acc + day.durationMs, 0);
-    this.totalHistoryLabel = this.formatDuration(totalMs);
-  }
-
-  private formatDuration(ms: number): string {
-    const totalSeconds = Math.floor(ms / 1000);
-    const hours = Math.floor(totalSeconds / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    if (hours > 0) {
-      return `${hours}h ${minutes}min`;
-    }
-    return `${minutes} min`;
-  }
-
   private formatFreq(freq: number): string {
     if (freq >= 1000) {
       return `${(freq / 1000).toFixed(1).replace('.0', '')} kHz`;
@@ -885,6 +823,7 @@ export class HomePage implements AfterViewInit, OnDestroy {
   private loadInitialSettings(): void {
     const defaults: SavedSettings = {
       freqIndex: 12,
+      customFreq: null,
       volume: 30,
       hearingProfile: '30',
       modType: 'amp',
@@ -893,6 +832,7 @@ export class HomePage implements AfterViewInit, OnDestroy {
 
     const settings = this.loadSettings(defaults);
     this.selectedFreqIndex = settings.freqIndex;
+    this.customFreq = settings.customFreq;
     this.volume = settings.volume;
     this.hearingProfile = settings.hearingProfile;
     this.modType = settings.modType;
@@ -902,14 +842,16 @@ export class HomePage implements AfterViewInit, OnDestroy {
     const customFreqParam = urlParams.get('freq');
     if (customFreqParam) {
       const parsed = Number.parseInt(customFreqParam, 10);
-      if (parsed >= 100 && parsed <= 20000) {
-        this.customFreq = parsed;
-        this.generator.tinnitusFreq = parsed;
+      if (parsed >= this.frequencyMin && parsed <= this.frequencyMax) {
+        this.customFreq = this.snapFrequencyToStep(parsed);
+        this.generator.tinnitusFreq = this.customFreq;
       }
     }
 
-    if (!this.customFreq) {
+    if (this.customFreq === null) {
       this.generator.tinnitusFreq = this.frequencies[this.selectedFreqIndex];
+    } else {
+      this.selectedFreqIndex = this.findClosestFrequencyIndex(this.customFreq);
     }
 
     this.generator.hearingCorrectionMax = Number(this.hearingProfile);
@@ -931,6 +873,12 @@ export class HomePage implements AfterViewInit, OnDestroy {
           typeof parsed.freqIndex === 'number'
             ? parsed.freqIndex
             : defaults.freqIndex,
+        customFreq:
+          typeof parsed.customFreq === 'number' &&
+          parsed.customFreq >= this.frequencyMin &&
+          parsed.customFreq <= this.frequencyMax
+            ? this.snapFrequencyToStep(parsed.customFreq)
+            : defaults.customFreq,
         volume:
           typeof parsed.volume === 'number' ? parsed.volume : defaults.volume,
         hearingProfile:
@@ -948,12 +896,36 @@ export class HomePage implements AfterViewInit, OnDestroy {
   private persistSettings(): void {
     const settings: SavedSettings = {
       freqIndex: this.selectedFreqIndex,
+      customFreq: this.customFreq,
       volume: this.volume,
       hearingProfile: this.hearingProfile,
       modType: this.modType,
       pan: this.pan,
     };
     localStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+  }
+
+  private clampFrequency(freq: number): number {
+    return Math.max(this.frequencyMin, Math.min(this.frequencyMax, freq));
+  }
+
+  private snapFrequencyToStep(freq: number): number {
+    return Math.round(freq / this.frequencyStep) * this.frequencyStep;
+  }
+
+  private findClosestFrequencyIndex(freq: number): number {
+    let bestIndex = 0;
+    let bestDistance = Number.POSITIVE_INFINITY;
+
+    for (let i = 0; i < this.frequencies.length; i += 1) {
+      const distance = Math.abs(this.frequencies[i] - freq);
+      if (distance < bestDistance) {
+        bestDistance = distance;
+        bestIndex = i;
+      }
+    }
+
+    return bestIndex;
   }
 
   private startDiagnosticsLoop(): void {

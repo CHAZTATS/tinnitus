@@ -65,6 +65,13 @@ Notes:
 - Behavior can vary by OEM battery optimization policies.
 - If playback is killed in background, disable battery optimization for the app while testing.
 
+### Play Store versioning
+
+Use manual versioning in `android/app/build.gradle`.
+
+- Increase `versionCode` for every Play Console upload.
+- Update `versionName` as desired for release labeling.
+
 ## iOS checklist
 
 1. Use macOS with Xcode.
@@ -102,3 +109,28 @@ If you need guaranteed long-duration playback reliability, move synthesis to a n
 3. Lock/unlock screen or switch apps.
 4. Return to the app and inspect log entries.
 5. Use Copy Logs to paste traces into bug reports.
+
+## Ionic Appflow iOS build fix (Capacitor 8 SPM)
+
+If Appflow fails with:
+
+- No .xcworkspace found at ios/App/App.xcworkspace
+- Detected IOS_PACKAGE_MANAGER=:cocoapods
+
+then Appflow is trying to build with CocoaPods, but this project uses Swift Package Manager.
+
+Set these Appflow environment variables for the iOS build:
+
+- ENABLE_SPM_SUPPORT=true
+- IOS_PACKAGE_MANAGER=spm
+
+Where to set them:
+
+1. Appflow dashboard -> App -> Build settings -> Environment variables.
+2. Add the two keys above for the target build stack/environment.
+3. Re-run the iOS build.
+
+Quick verification:
+
+- iOS folder contains App.xcodeproj and CapApp-SPM.
+- There is no App.xcworkspace and no Podfile in ios/App for this project.

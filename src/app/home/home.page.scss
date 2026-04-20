@@ -1,36 +1,59 @@
 :host {
-  --bg-base: #06111f;
-  --bg-panel: #11243d;
-  --bg-soft: #0f1b2d;
-  --text-main: #e7edf7;
-  --text-dim: #9fb2cc;
-  --accent: #34d5ff;
-  --accent-2: #4ee6a8;
-  --danger: #ff6b7b;
+  --bg-base: #0f1824;
+  --bg-panel: #162433;
+  --text-main: #e5eef8;
+  --text-dim: #a6bbd1;
+  --text-soft: #8298af;
+  --accent: #6cbcff;
+  --accent-soft: rgb(108 188 255 / 16%);
+  --line: #2c4055;
+  --danger: #ff9ca0;
+  --shadow: 0 8px 20px rgb(0 0 0 / 22%);
 }
 
 .app-header ion-toolbar {
-  --background: linear-gradient(110deg, #0b1f36, #0d2947);
+  --background: #111d2b;
   --color: var(--text-main);
+  --border-color: var(--line);
 }
 
 .therapy-content {
-  --background: radial-gradient(circle at 20% 10%, #13335a 0%, var(--bg-base) 55%);
+  --background: linear-gradient(180deg, #142131 0%, var(--bg-base) 100%);
   color: var(--text-main);
 }
 
+.backdrop-shape {
+  display: none;
+}
+
+.page-shell {
+  position: relative;
+  z-index: 1;
+  padding-top: 4px;
+}
+
 .hero {
-  padding: 20px 16px 8px;
+  padding: 18px 16px 10px;
   text-align: center;
+}
+
+.hero-kicker {
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--accent);
+  font-size: 0.7rem;
+  font-weight: 700;
 }
 
 .hero h1 {
   margin: 8px 0;
-  font-size: 1.6rem;
+  font-size: 1.55rem;
   line-height: 1.2;
+  font-weight: 700;
 }
 
-.hero p {
+.hero-subtitle {
   margin: 0;
   color: var(--text-dim);
 }
@@ -39,28 +62,88 @@
   display: inline-block;
   margin-top: 8px;
   color: var(--accent);
-  font-size: 0.9rem;
+  font-size: 0.88rem;
+  text-decoration: none;
 }
 
-.panel {
-  margin: 12px;
-  border-radius: 16px;
-  background: linear-gradient(170deg, var(--bg-panel), var(--bg-soft));
-  border: 1px solid #224266;
-  box-shadow: 0 10px 24px rgb(0 0 0 / 22%);
+.hero a:hover {
+  text-decoration: underline;
+}
+
+.panel,
+.panel-like,
+.medical-dashboard {
+  margin: 10px 12px;
+  border-radius: 14px;
+  background: var(--bg-panel);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.medical-dashboard {
+  padding: 12px;
+}
+
+.dash-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.dash-title {
+  margin: 0;
+  color: var(--text-main);
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+
+.dash-subtitle {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: 0.76rem;
+}
+
+.dash-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.dash-metric {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 9px 10px;
+  background: #122131;
+}
+
+.metric-label {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.metric-value {
+  margin: 4px 0 0;
+  color: var(--text-main);
+  font-weight: 700;
+  font-size: 0.92rem;
 }
 
 .panel ion-card-title {
-  color: var(--accent);
+  color: var(--text-main);
 }
 
 .warning-panel {
-  border-color: #914555;
-  background: linear-gradient(170deg, #3a1d2a, #2a1520);
+  border-color: #5a3a43;
+  background: #2a1f25;
 }
 
 .warning-title {
-  color: #ff9aa8;
+  color: #ffb8bf;
   font-weight: 700;
   margin-top: 0;
   margin-bottom: 6px;
@@ -73,13 +156,27 @@ ul {
 
 li {
   margin-bottom: 6px;
+  color: var(--text-dim);
 }
 
 .info {
   color: var(--text-dim);
   margin-top: 10px;
   margin-bottom: 0;
-  font-size: 0.9rem;
+  font-size: 0.88rem;
+}
+
+.step {
+  display: inline-grid;
+  place-items: center;
+  width: 30px;
+  height: 22px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  border: 1px solid #4f6f8e;
+  color: var(--accent);
+  font-size: 0.72rem;
+  font-weight: 700;
 }
 
 .freq-grid {
@@ -91,26 +188,44 @@ li {
 
 .freq-btn {
   appearance: none;
-  border: 1px solid #30537d;
+  border: 1px solid var(--line);
   border-radius: 10px;
-  background: #0a1a30;
+  background: #122131;
   color: var(--text-main);
   padding: 10px 6px;
   font-size: 0.82rem;
   font-weight: 600;
   transition:
     border-color 120ms ease,
-    transform 120ms ease,
     background-color 120ms ease;
 }
 
-.freq-btn:active {
-  transform: scale(0.98);
+.freq-btn.selected {
+  border-color: #6ca8dc;
+  background: var(--accent-soft);
 }
 
-.freq-btn.selected {
-  border-color: var(--accent);
-  background: rgb(52 213 255 / 18%);
+.freq-slider-wrap {
+  margin-top: 12px;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: #122131;
+}
+
+.freq-slider-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 2px;
+  color: var(--text-dim);
+  font-size: 0.8rem;
+}
+
+.freq-slider-head span:last-child {
+  color: var(--accent);
+  font-weight: 700;
 }
 
 .selected-label {
@@ -123,19 +238,42 @@ li {
   font-weight: 700;
 }
 
+.split-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+}
+
 .control-item {
-  --background: transparent;
-  --inner-padding-end: 0;
-  --padding-start: 0;
+  --background: #122131;
+  --inner-padding-end: 10px;
+  --padding-start: 10px;
   --color: var(--text-main);
+  border: 1px solid var(--line);
+  border-radius: 10px;
 }
 
 ion-range {
-  --bar-background: #2b4a72;
-  --bar-background-active: linear-gradient(90deg, var(--accent), var(--accent-2));
-  --knob-background: #fff;
+  --bar-background: #33495f;
+  --bar-background-active: var(--accent);
+  --knob-background: #ffffff;
   --pin-background: var(--accent);
-  --pin-color: #072039;
+  --pin-color: #ffffff;
+}
+
+.range-block {
+  margin-top: 8px;
+}
+
+.range-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.range-label {
+  margin: 0;
+  color: var(--text-dim);
 }
 
 .value-row {
@@ -145,8 +283,12 @@ ion-range {
   margin: 0;
 }
 
+.playback-shell {
+  padding: 10px 12px 12px;
+}
+
 .controls {
-  padding: 8px 12px;
+  padding: 8px 0;
   display: flex;
   gap: 10px;
   justify-content: center;
@@ -157,60 +299,55 @@ ion-range {
   font-weight: 700;
 }
 
+.start-btn {
+  --background: #3f8fd1;
+  --color: #ffffff;
+}
+
+.stop-btn {
+  --color: var(--danger);
+  --border-color: #8d5560;
+}
+
 .visualizer {
-  width: calc(100% - 24px);
-  margin: 8px 12px 12px;
+  width: 100%;
+  margin: 8px 0 0;
   height: 64px;
-  background: #111827;
+  background: #0f2033;
   border-radius: 12px;
-  border: 1px solid #2b415f;
+  border: 1px solid #1e3855;
 }
 
 .status {
-  margin: 0 12px 12px;
+  margin: 0 0 12px;
   padding: 14px;
-  border-radius: 14px;
+  border-radius: 12px;
   text-align: center;
-  border: 1px solid #2e4e76;
-  background: rgb(16 29 48 / 85%);
+  border: 1px solid var(--line);
+  background: #122131;
 }
 
 .status.playing {
-  border-color: var(--accent);
-  background: rgb(52 213 255 / 14%);
+  border-color: #6ca8dc;
+  background: #18324a;
+}
+
+.status-caption {
+  margin: 0;
+  color: var(--text-soft);
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
 }
 
 .timer {
-  font-size: 1.8rem;
+  font-size: 1.75rem;
   font-weight: 800;
   color: var(--accent);
 }
 
-.empty-history {
-  color: var(--text-dim);
-}
-
-.history-list {
-  background: transparent;
-}
-
-.history-list ion-item {
-  --background: transparent;
-  --color: var(--text-main);
-}
-
-.history-duration {
-  color: var(--accent);
-  font-weight: 700;
-}
-
-.total-row {
-  margin-top: 4px;
-}
-
-.notes p {
-  margin: 0;
-  color: var(--text-dim);
+.status-text {
+  color: var(--text-main);
 }
 
 .diag-controls {
@@ -222,7 +359,7 @@ ion-range {
 
 .diag-status {
   margin: 0 0 8px;
-  color: var(--accent-2);
+  color: #75c7a4;
   font-size: 0.85rem;
 }
 
@@ -231,10 +368,10 @@ ion-range {
   max-height: 200px;
   overflow: auto;
   padding: 10px;
-  border: 1px solid #2d486f;
+  border: 1px solid var(--line);
   border-radius: 10px;
-  background: #071426;
-  color: #cbe4ff;
+  background: #102030;
+  color: #b8d3ef;
   font-size: 0.75rem;
   line-height: 1.35;
   white-space: pre-wrap;
@@ -246,10 +383,12 @@ ion-range {
 
 @media (min-width: 768px) {
   .hero {
-    padding-top: 28px;
+    padding-top: 26px;
   }
 
-  .panel {
+  .panel,
+  .panel-like,
+  .medical-dashboard {
     margin-left: auto;
     margin-right: auto;
     max-width: 760px;
@@ -257,5 +396,20 @@ ion-range {
 
   .freq-grid {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .dash-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 420px) {
+  .controls {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .controls ion-button {
+    width: 100%;
   }
 }

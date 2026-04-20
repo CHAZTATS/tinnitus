@@ -25,6 +25,8 @@
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
 
+@import url("https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap");
+
 /**
  * Ionic Dark Mode
  * -----------------------------------------------------
@@ -34,4 +36,14 @@
 
 /* @import "@ionic/angular/css/palettes/dark.always.css"; */
 /* @import "@ionic/angular/css/palettes/dark.class.css"; */
-@import '@ionic/angular/css/palettes/dark.system.css';
+@import "@ionic/angular/css/palettes/dark.system.css";
+
+body,
+ion-app,
+ion-content,
+ion-label,
+ion-button,
+ion-title,
+ion-card-title {
+    font-family: "IBM Plex Sans", "Segoe UI", "Helvetica Neue", sans-serif;
+}
