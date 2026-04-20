@@ -12,6 +12,9 @@ export class TinnitusTherapyService {
 
   private isPlaying = false;
   private nextScheduleTime = 0;
+  private nextAudibleStimulusTime: number | null = null;
+  private lastStimulusStartTime: number | null = null;
+  private lastStimulusIntervalSec: number | null = null;
   private schedulerInterval: ReturnType<typeof setInterval> | null = null;
 
   private readonly sampleRate = 44100;
@@ -77,15 +80,56 @@ export class TinnitusTherapyService {
     state: AudioContextState;
     currentTime: number;
     sampleRate: number;
+    isPlaying: boolean;
+    schedulerActive: boolean;
+    stimulusDurationSec: number;
+    scheduledIntervalSec: number;
+    silenceGapSec: number;
+    nextStimulusInSec: number | null;
+    queueHorizonSec: number;
+    scheduleAheadTimeSec: number;
+    schedulerLookaheadMs: number;
+    tinnitusFreqHz: number;
+    hearingCorrectionMaxDb: number;
+    modulationType: ModulationType;
+    outputVolume: number;
+    outputPan: number;
   } | null {
     if (!this.audioContext) {
       return null;
     }
 
+    const scheduledIntervalSec =
+      this.lastStimulusIntervalSec ?? this.stimulusDuration;
+    const silenceGapSec = Math.max(
+      0,
+      scheduledIntervalSec - this.stimulusDuration,
+    );
+
+    const currentTime = this.audioContext.currentTime;
+    const nextStimulusInSec =
+      this.nextAudibleStimulusTime === null
+        ? null
+        : Math.max(0, this.nextAudibleStimulusTime - currentTime);
+
     return {
       state: this.audioContext.state,
-      currentTime: this.audioContext.currentTime,
+      currentTime,
       sampleRate: this.audioContext.sampleRate,
+      isPlaying: this.isPlaying,
+      schedulerActive: this.schedulerInterval !== null,
+      stimulusDurationSec: this.stimulusDuration,
+      scheduledIntervalSec,
+      silenceGapSec,
+      nextStimulusInSec,
+      queueHorizonSec: Math.max(0, this.nextScheduleTime - currentTime),
+      scheduleAheadTimeSec: this.scheduleAheadTime,
+      schedulerLookaheadMs: this.schedulerLookaheadMs,
+      tinnitusFreqHz: this.tinnitusFreq,
+      hearingCorrectionMaxDb: this.hearingCorrectionMax,
+      modulationType: this.modType,
+      outputVolume: this.volume,
+      outputPan: this.pan,
     };
   }
 
@@ -111,6 +155,9 @@ export class TinnitusTherapyService {
 
     this.isPlaying = true;
     this.nextScheduleTime = this.audioContext.currentTime;
+    this.nextAudibleStimulusTime = null;
+    this.lastStimulusStartTime = null;
+    this.lastStimulusIntervalSec = null;
     this.masterGain.gain.setValueAtTime(
       this.volume,
       this.audioContext.currentTime,
@@ -122,6 +169,7 @@ export class TinnitusTherapyService {
 
   public stop(): void {
     this.isPlaying = false;
+    this.nextAudibleStimulusTime = null;
 
     this.stopSchedulerLoop();
 
@@ -388,20 +436,37 @@ export class TinnitusTherapyService {
     }
 
     const currentTime = this.audioContext.currentTime;
+    let nearestFutureStimulus: number | null = null;
+
     if (this.nextScheduleTime < currentTime) {
       this.nextScheduleTime = currentTime;
     }
 
     while (this.nextScheduleTime < currentTime + this.scheduleAheadTime) {
+      if (
+        this.nextScheduleTime >= currentTime &&
+        (nearestFutureStimulus === null ||
+          this.nextScheduleTime < nearestFutureStimulus)
+      ) {
+        nearestFutureStimulus = this.nextScheduleTime;
+      }
+
       this.scheduleStimulusAt(this.nextScheduleTime);
       this.nextScheduleTime += this.stimulusDuration;
     }
+
+    this.nextAudibleStimulusTime = nearestFutureStimulus;
   }
 
   private scheduleStimulusAt(startTime: number): void {
     if (!this.audioContext || !this.masterGain || !this.isPlaying) {
       return;
     }
+
+    if (this.lastStimulusStartTime !== null) {
+      this.lastStimulusIntervalSec = startTime - this.lastStimulusStartTime;
+    }
+    this.lastStimulusStartTime = startTime;
 
     const buffer = this.generateStimulus();
     const source = this.audioContext.createBufferSource();
