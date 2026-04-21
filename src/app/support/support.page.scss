@@ -1,47 +1,47 @@
 :host {
-  --bg: #f5f9fc;
-  --text: #13344e;
+    --bg: #f5f9fc;
+    --text: #13344e;
 }
 
 .support-content {
-  --background:
-    radial-gradient(circle at 0% 0%, rgb(49 165 220 / 12%) 0%, transparent 38%),
-    linear-gradient(180deg, #eaf4fb 0%, var(--bg) 100%);
-  color: var(--text);
+    --background:
+        radial-gradient(circle at 0% 0%, rgb(49 165 220 / 12%) 0%, transparent 38%),
+        linear-gradient(180deg, #eaf4fb 0%, var(--bg) 100%);
+    color: var(--text);
 }
 
 .shell {
-  max-width: 860px;
-  margin: 0 auto;
-  padding: 16px 12px 24px;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 16px 12px 24px;
 }
 
 ion-card {
-  margin: 0 0 12px;
-  border: 1px solid #d7e5ef;
-  box-shadow: 0 10px 28px rgb(15 66 99 / 8%);
+    margin: 0 0 12px;
+    border: 1px solid #d7e5ef;
+    box-shadow: 0 10px 28px rgb(15 66 99 / 8%);
 }
 
 ion-card-title {
-  color: #143149;
+    color: #143149;
 }
 
 p {
-  color: #476680;
-  line-height: 1.45;
+    color: #476680;
+    line-height: 1.45;
 }
 
 a {
-  color: #0f79b8;
-  text-decoration: none;
+    color: #0f79b8;
+    text-decoration: none;
 }
 
 a:hover {
-  text-decoration: underline;
+    text-decoration: underline;
 }
 
 h3 {
-  margin: 0 0 4px;
-  color: #173a56;
-  font-size: 0.95rem;
+    margin: 0 0 4px;
+    color: #173a56;
+    font-size: 0.95rem;
 }
