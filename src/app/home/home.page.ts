@@ -633,6 +633,18 @@ export class HomePage implements AfterViewInit, OnDestroy {
         this.adMobReady = true;
       }
 
+      const consentInfo = await AdMob.requestConsentInfo();
+      if (!consentInfo.canRequestAds && consentInfo.isConsentFormAvailable) {
+        const consentAfterForm = await AdMob.showConsentForm();
+        if (!consentAfterForm.canRequestAds) {
+          this.addDiagnostic('admob banner blocked: consent not granted');
+          return;
+        }
+      } else if (!consentInfo.canRequestAds) {
+        this.addDiagnostic('admob banner blocked: consent unavailable');
+        return;
+      }
+
       const trackingStatus = await AdMob.trackingAuthorizationStatus();
       if (trackingStatus.status === 'notDetermined') {
         await AdMob.requestTrackingAuthorization();
@@ -649,8 +661,26 @@ export class HomePage implements AfterViewInit, OnDestroy {
       await AdMob.showBanner(bannerOptions);
       this.addDiagnostic('admob bottom banner shown');
     } catch (error) {
-      this.addDiagnostic('admob banner failed to show');
+      this.addDiagnostic(
+        `admob banner failed: ${this.formatAdMobError(error)}`,
+      );
       console.error('AdMob banner initialization failed', error);
+    }
+  }
+
+  private formatAdMobError(error: unknown): string {
+    if (error instanceof Error) {
+      return error.message;
+    }
+
+    if (typeof error === 'string') {
+      return error;
+    }
+
+    try {
+      return JSON.stringify(error);
+    } catch {
+      return 'unknown error';
     }
   }
 
