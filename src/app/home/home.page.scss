@@ -78,6 +78,33 @@
   padding: 12px 12px 6px;
 }
 
+.ad-slot {
+  margin: 8px auto;
+  width: min(940px, calc(100% - 24px));
+  min-height: 56px;
+  display: grid;
+  place-items: center;
+  border: 1px dashed color-mix(in srgb, var(--line) 70%, var(--accent) 30%);
+  border-radius: 14px;
+  background: color-mix(in srgb, var(--panel-2) 82%, var(--accent-soft) 18%);
+  color: var(--text-soft);
+  text-align: center;
+}
+
+.ad-slot p {
+  margin: 0;
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+}
+
+.ad-slot-top {
+  margin-top: max(8px, env(safe-area-inset-top));
+}
+
+.ad-slot-bottom {
+  margin-bottom: max(8px, env(safe-area-inset-bottom));
+}
+
 .panel,
 .panel-like {
   background: var(--panel);
@@ -406,10 +433,6 @@ ion-range {
   font-size: 0.75rem;
   line-height: 1.4;
   white-space: pre-wrap;
-}
-
-.bottom-space {
-  height: 20px;
 }
 
 @media (min-width: 768px) {

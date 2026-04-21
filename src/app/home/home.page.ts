@@ -6,6 +6,13 @@ import {
   OnDestroy,
 } from '@angular/core';
 import {
+  AdMob,
+  BannerAdPosition,
+  BannerAdSize,
+  type BannerAdOptions,
+} from '@capacitor-community/admob';
+import { Capacitor } from '@capacitor/core';
+import {
   IonButton,
   IonButtons,
   IonCard,
@@ -23,6 +30,7 @@ import {
   IonToggle,
   IonToolbar,
 } from '@ionic/angular/standalone';
+import { environment } from '../../environments/environment';
 import {
   ModulationType,
   TinnitusTherapyService,
@@ -67,6 +75,8 @@ const THEME_KEY = 'tinnitus-theme';
   ],
 })
 export class HomePage implements AfterViewInit, OnDestroy {
+  public readonly showNativeAdSlots = Capacitor.isNativePlatform();
+
   @HostBinding('class.theme-dark')
   public get darkThemeClass(): boolean {
     return this.isDarkTheme;
@@ -106,6 +116,7 @@ export class HomePage implements AfterViewInit, OnDestroy {
   public diagnosticLogs: string[] = [];
   public diagnosticCopyStatus = '';
 
+  private adMobReady = false;
   private timerInterval: ReturnType<typeof setInterval> | null = null;
   private playbackStartedAt = 0;
   private diagnosticsInterval: ReturnType<typeof setInterval> | null = null;
@@ -146,6 +157,8 @@ export class HomePage implements AfterViewInit, OnDestroy {
       this.addDiagnostic('native audio warmup requested');
       this.nativeWarmupTimeout = null;
     }, 300);
+
+    void this.showNativeBannerAd();
   }
 
   public ngOnDestroy(): void {
@@ -159,6 +172,10 @@ export class HomePage implements AfterViewInit, OnDestroy {
     if (this.nativeWarmupTimeout) {
       clearTimeout(this.nativeWarmupTimeout);
       this.nativeWarmupTimeout = null;
+    }
+
+    if (this.showNativeAdSlots) {
+      void AdMob.removeBanner();
     }
 
     this.stopPlayback(false);
@@ -228,6 +245,9 @@ export class HomePage implements AfterViewInit, OnDestroy {
 
     this.generator.tinnitusFreq = this.frequencies[index];
     this.generator.previewTone(this.frequencies[index]);
+    this.addDiagnostic(
+      `frequency selected: ${Math.round(this.frequencies[index])}Hz`,
+    );
 
     this.persistSettings();
   }
@@ -260,6 +280,9 @@ export class HomePage implements AfterViewInit, OnDestroy {
 
     if (this.customFreq !== null) {
       this.generator.previewTone(this.customFreq);
+      this.addDiagnostic(
+        `frequency selected: ${Math.round(this.customFreq)}Hz`,
+      );
     }
   }
 
@@ -530,7 +553,7 @@ export class HomePage implements AfterViewInit, OnDestroy {
           : `${info.nextStimulusInSec.toFixed(2)}s`;
 
       this.addDiagnostic(
-        `settings: backend=${info.backend}, nativeLoaded=${info.nativeAssetLoaded}, freq=${Math.round(info.tinnitusFreqHz)}Hz, mod=${info.modulationType}, hearingCorr=${info.hearingCorrectionMaxDb}dB, vol=${Math.round(info.outputVolume * 100)}%, pan=${Math.round(info.outputPan * 100)}`,
+        `settings: backend=${info.backend}, nativeMode=${info.nativePlaybackMode}, nativeLoaded=${info.nativeAssetLoaded}, freq=${Math.round(info.tinnitusFreqHz)}Hz, mod=${info.modulationType}, hearingCorr=${info.hearingCorrectionMaxDb}dB, vol=${Math.round(info.outputVolume * 100)}%, pan=${Math.round(info.outputPan * 100)}`,
       );
       this.addDiagnostic(
         `timing: state=${info.state}, t=${info.currentTime.toFixed(2)}s, sr=${info.sampleRate}, playing=${info.isPlaying}, scheduler=${info.schedulerActive ? 'on' : 'off'}, interval=${info.scheduledIntervalSec.toFixed(2)}s, silenceGap=${info.silenceGapSec.toFixed(2)}s, nextStimulus=${nextStimulusText}, queue=${info.queueHorizonSec.toFixed(2)}s/${info.scheduleAheadTimeSec.toFixed(2)}s, lookahead=${info.schedulerLookaheadMs}ms`,
@@ -589,5 +612,59 @@ export class HomePage implements AfterViewInit, OnDestroy {
         this.stopPlay();
       }
     });
+  }
+
+  private async showNativeBannerAd(): Promise<void> {
+    if (!this.showNativeAdSlots) {
+      return;
+    }
+
+    const adId = this.getBannerAdUnitId();
+    if (!adId) {
+      this.addDiagnostic('admob banner skipped: ad unit id missing');
+      return;
+    }
+
+    try {
+      if (!this.adMobReady) {
+        await AdMob.initialize({
+          initializeForTesting: environment.adMob.testing,
+        });
+        this.adMobReady = true;
+      }
+
+      const trackingStatus = await AdMob.trackingAuthorizationStatus();
+      if (trackingStatus.status === 'notDetermined') {
+        await AdMob.requestTrackingAuthorization();
+      }
+
+      const bannerOptions: BannerAdOptions = {
+        adId,
+        adSize: BannerAdSize.ADAPTIVE_BANNER,
+        position: BannerAdPosition.BOTTOM_CENTER,
+        margin: 0,
+        isTesting: environment.adMob.testing,
+      };
+
+      await AdMob.showBanner(bannerOptions);
+      this.addDiagnostic('admob bottom banner shown');
+    } catch (error) {
+      this.addDiagnostic('admob banner failed to show');
+      console.error('AdMob banner initialization failed', error);
+    }
+  }
+
+  private getBannerAdUnitId(): string {
+    const platform = Capacitor.getPlatform();
+
+    if (platform === 'ios') {
+      return environment.adMob.iosBannerAdUnitId;
+    }
+
+    if (platform === 'android') {
+      return environment.adMob.androidBannerAdUnitId;
+    }
+
+    return '';
   }
 }

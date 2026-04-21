@@ -4,4 +4,5 @@
     <string name="title_activity_main">Tinnitus Therapy</string>
     <string name="package_name">com.example.tinnitus</string>
     <string name="custom_url_scheme">com.example.tinnitus</string>
+    <string name="admob_app_id">ca-app-pub-3106052247964578~4456641012</string>
 </resources>

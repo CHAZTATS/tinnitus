@@ -15,6 +15,10 @@
 </ion-header>
 
 <ion-content [fullscreen]="true" class="therapy-content">
+  <section class="ad-slot ad-slot-top" *ngIf="showNativeAdSlots" aria-label="Top advertisement space">
+    <p>Top ad space reserved</p>
+  </section>
+
   <div class="page-shell">
     <section class="hero panel-like">
       <p class="hero-kicker">Evidence-guided auditory protocol</p>
@@ -187,5 +191,7 @@
     </ion-card>
   </div>
 
-  <div class="bottom-space"></div>
+  <section class="ad-slot ad-slot-bottom" *ngIf="showNativeAdSlots" aria-label="Bottom advertisement space">
+    <p>Bottom AdMob banner active in native app</p>
+  </section>
 </ion-content>

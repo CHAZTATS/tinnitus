@@ -1,0 +1,30 @@
+diff --git a/node_modules/@capacitor-community/native-audio/android/src/main/java/com/getcapacitor/community/audio/NativeAudio.java b/node_modules/@capacitor-community/native-audio/android/src/main/java/com/getcapacitor/community/audio/NativeAudio.java
+index 6e9938b..f5494c9 100644
+--- a/node_modules/@capacitor-community/native-audio/android/src/main/java/com/getcapacitor/community/audio/NativeAudio.java
++++ b/node_modules/@capacitor-community/native-audio/android/src/main/java/com/getcapacitor/community/audio/NativeAudio.java
+@@ -65,24 +65,7 @@ public class NativeAudio extends Plugin implements AudioManager.OnAudioFocusChan
+     @Override
+     protected void handleOnPause() {
+         super.handleOnPause();
+-
+-        try {
+-            if (audioAssetList != null) {
+-                for (HashMap.Entry<String, AudioAsset> entry : audioAssetList.entrySet()) {
+-                    AudioAsset audio = entry.getValue();
+-
+-                    if (audio != null) {
+-                        boolean wasPlaying = audio.pause();
+-
+-                        if (wasPlaying) {
+-                            resumeList.add(audio);
+-                        }
+-                    }
+-                }
+-            }
+-        } catch (Exception ex) {
+-            Log.d(TAG, "Exception caught while listening for handleOnPause: " + ex.getLocalizedMessage());
+-        }
++        // Keep playback running across app background transitions.
+     }
+ 
+     @Override

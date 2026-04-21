@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { NativeAudio } from '@capacitor-community/native-audio';
 import { Capacitor } from '@capacitor/core';
+import { Device } from '@capacitor/device';
 import { Directory, Filesystem } from '@capacitor/filesystem';
 
 export type ModulationType = 'amp' | 'phase';
@@ -12,14 +13,22 @@ export class TinnitusTherapyService {
   private audioContext: AudioContext | null = null;
   private masterGain: GainNode | null = null;
   private pannerNode: StereoPannerNode | null = null;
-  private readonly useNativeAudio = Capacitor.isNativePlatform();
+  private useNativeAudio = Capacitor.isNativePlatform();
+  private nativeBackendProbe: Promise<void> | null = null;
   private readonly nativeAssetId = 'tinnitus-therapy-loop';
+  private readonly nativePreviewAssetId = 'tinnitus-preview-tone';
   private readonly nativeLoopDurationSec = 32;
   private readonly nativeCacheFileName = 'therapy-loop-current.wav';
+  private readonly nativePreviewFileName = 'therapy-preview-tone.wav';
   private readonly nativeUniqueSegments = 2;
+  private readonly nativeLoopTargetPeak = 0.85;
+  private readonly nativeLoopMaxBoost = 24;
   private nativeAssetFileName: string | null = null;
   private nativeAssetLoaded = false;
   private nativeAssetSignature: string | null = null;
+  private nativePlaybackMode: 'loop' | 'play-retrigger' = 'loop';
+  private nativePreviewLoaded = false;
+  private nativePreviewSerial = 0;
   private nativeInitPromise: Promise<void> | null = null;
   private nativePanRefreshTimeout: ReturnType<typeof setTimeout> | null = null;
 
@@ -29,6 +38,7 @@ export class TinnitusTherapyService {
   private lastStimulusStartTime: number | null = null;
   private lastStimulusIntervalSec: number | null = null;
   private schedulerInterval: ReturnType<typeof setInterval> | null = null;
+  private scheduledSources = new Set<AudioBufferSourceNode>();
 
   private readonly sampleRate = 44100;
   private readonly stimulusDuration = 4;
@@ -59,6 +69,8 @@ export class TinnitusTherapyService {
   }
 
   public constructor() {
+    this.nativeBackendProbe = this.detectNativeAudioBackend();
+
     const fb: number[] = [];
     for (let i = -4; i <= 8; i += 1) {
       fb.push(1000 * Math.pow(2, i * 0.5));
@@ -113,6 +125,7 @@ export class TinnitusTherapyService {
     modulationType: ModulationType;
     outputVolume: number;
     outputPan: number;
+    nativePlaybackMode: 'loop' | 'play-retrigger';
   } | null {
     if (!this.audioContext) {
       return null;
@@ -151,6 +164,7 @@ export class TinnitusTherapyService {
       modulationType: this.modType,
       outputVolume: this.volume,
       outputPan: this.pan,
+      nativePlaybackMode: this.nativePlaybackMode,
     };
   }
 
@@ -182,6 +196,15 @@ export class TinnitusTherapyService {
   }
 
   public start(): void {
+    if (this.isPlaying) {
+      return;
+    }
+
+    if (this.nativeBackendProbe) {
+      void this.startAfterBackendResolution();
+      return;
+    }
+
     if (this.useNativeAudio) {
       this.isPlaying = true;
       this.nextAudibleStimulusTime = null;
@@ -214,12 +237,18 @@ export class TinnitusTherapyService {
     this.isPlaying = false;
     this.nextAudibleStimulusTime = null;
 
+    if (this.nativePanRefreshTimeout) {
+      clearTimeout(this.nativePanRefreshTimeout);
+      this.nativePanRefreshTimeout = null;
+    }
+
     if (this.useNativeAudio) {
       void this.stopNativeLoopPlayback(false);
       return;
     }
 
     this.stopSchedulerLoop();
+    this.cancelScheduledSources();
 
     if (this.masterGain && this.audioContext) {
       this.masterGain.gain.setValueAtTime(0, this.audioContext.currentTime);
@@ -227,6 +256,11 @@ export class TinnitusTherapyService {
   }
 
   public previewTone(freq: number, duration = 0.5): void {
+    if (this.useNativeAudio) {
+      void this.playNativePreviewTone(freq, duration);
+      return;
+    }
+
     this.ensureContext();
     if (!this.audioContext) {
       return;
@@ -264,6 +298,8 @@ export class TinnitusTherapyService {
   public destroy(): void {
     this.stop();
 
+    void this.cleanupNativePreviewTone(true);
+
     if (this.nativePanRefreshTimeout) {
       clearTimeout(this.nativePanRefreshTimeout);
       this.nativePanRefreshTimeout = null;
@@ -287,6 +323,11 @@ export class TinnitusTherapyService {
   }
 
   public warmUpNativeAudio(): void {
+    if (this.nativeBackendProbe) {
+      void this.warmUpNativeAudioWhenReady();
+      return;
+    }
+
     if (
       !this.useNativeAudio ||
       this.nativeAssetLoaded ||
@@ -304,6 +345,44 @@ export class TinnitusTherapyService {
       });
   }
 
+  private async detectNativeAudioBackend(): Promise<void> {
+    if (!Capacitor.isNativePlatform()) {
+      this.useNativeAudio = false;
+      return;
+    }
+
+    if (Capacitor.getPlatform() === 'android') {
+      this.useNativeAudio = true;
+      return;
+    }
+
+    try {
+      const info = await Device.getInfo();
+      this.useNativeAudio = !info.isVirtual;
+    } catch {
+      this.useNativeAudio = Capacitor.isNativePlatform();
+    }
+  }
+
+  private async ensureBackendResolved(): Promise<void> {
+    if (!this.nativeBackendProbe) {
+      return;
+    }
+
+    await this.nativeBackendProbe;
+    this.nativeBackendProbe = null;
+  }
+
+  private async startAfterBackendResolution(): Promise<void> {
+    await this.ensureBackendResolved();
+    this.start();
+  }
+
+  private async warmUpNativeAudioWhenReady(): Promise<void> {
+    await this.ensureBackendResolved();
+    this.warmUpNativeAudio();
+  }
+
   private async startNativeLoopPlayback(forceRebuild = false): Promise<void> {
     if (this.nativeInitPromise) {
       await this.nativeInitPromise;
@@ -318,6 +397,119 @@ export class TinnitusTherapyService {
     await this.nativeInitPromise;
   }
 
+  private async playNativePreviewTone(
+    freq: number,
+    duration: number,
+  ): Promise<void> {
+    const serial = this.nativePreviewSerial + 1;
+    this.nativePreviewSerial = serial;
+
+    try {
+      this.ensureContext();
+      const wavBase64 = this.generateNativePreviewWavBase64(freq, duration);
+
+      await this.cleanupNativePreviewTone(true);
+
+      await Filesystem.writeFile({
+        path: this.nativePreviewFileName,
+        data: wavBase64,
+        directory: Directory.Cache,
+      });
+
+      const fileUri = await Filesystem.getUri({
+        path: this.nativePreviewFileName,
+        directory: Directory.Cache,
+      });
+
+      await NativeAudio.preload({
+        assetId: this.nativePreviewAssetId,
+        assetPath: fileUri.uri,
+        audioChannelNum: 1,
+        isUrl: true,
+      });
+      this.nativePreviewLoaded = true;
+
+      await NativeAudio.setVolume({
+        assetId: this.nativePreviewAssetId,
+        volume: this.getNativeVolume(this.volume),
+      });
+      await NativeAudio.play({ assetId: this.nativePreviewAssetId });
+
+      setTimeout(
+        () => {
+          if (serial === this.nativePreviewSerial) {
+            void this.cleanupNativePreviewTone(true);
+          }
+        },
+        Math.max(200, Math.round(duration * 1000 + 120)),
+      );
+    } catch (error) {
+      console.error('Native preview playback failed', error);
+    }
+  }
+
+  private generateNativePreviewWavBase64(
+    freq: number,
+    duration: number,
+  ): string {
+    const boundedDuration = Math.max(0.1, Math.min(1.2, duration));
+    const numSamples = Math.max(
+      1,
+      Math.floor(boundedDuration * this.sampleRate),
+    );
+    const leftData = new Float32Array(numSamples);
+    const rightData = new Float32Array(numSamples);
+    const rampSamples = Math.max(1, Math.floor(0.03 * this.sampleRate));
+
+    for (let i = 0; i < numSamples; i += 1) {
+      const t = i / this.sampleRate;
+      let amp = 0.25;
+
+      if (i < rampSamples) {
+        amp *= i / rampSamples;
+      }
+
+      const tailIndex = numSamples - 1 - i;
+      if (tailIndex < rampSamples) {
+        amp *= tailIndex / rampSamples;
+      }
+
+      const sample = amp * Math.sin(2 * Math.PI * freq * t);
+      leftData[i] = sample;
+      rightData[i] = sample;
+    }
+
+    return this.encodeStereoFloatToWavBase64(leftData, rightData);
+  }
+
+  private async cleanupNativePreviewTone(deleteFile: boolean): Promise<void> {
+    try {
+      await NativeAudio.stop({ assetId: this.nativePreviewAssetId });
+    } catch {
+      // Ignore stop errors during preview cleanup.
+    }
+
+    if (this.nativePreviewLoaded) {
+      try {
+        await NativeAudio.unload({ assetId: this.nativePreviewAssetId });
+      } catch {
+        // Ignore unload errors during preview cleanup.
+      }
+      this.nativePreviewLoaded = false;
+    }
+
+    if (deleteFile) {
+      try {
+        await Filesystem.deleteFile({
+          path: this.nativePreviewFileName,
+          directory: Directory.Cache,
+        });
+      } catch {
+        // Ignore missing preview file errors.
+      }
+    }
+  }
+
   private async startNativeLoopPlaybackInternal(
     forceRebuild: boolean,
   ): Promise<void> {
@@ -330,7 +522,15 @@ export class TinnitusTherapyService {
         assetId: this.nativeAssetId,
         volume: this.getNativeVolume(this.volume),
       });
-      await NativeAudio.loop({ assetId: this.nativeAssetId });
+
+      if (Capacitor.getPlatform() === 'android') {
+        this.nativePlaybackMode = 'loop';
+        await NativeAudio.play({ assetId: this.nativeAssetId });
+        await NativeAudio.loop({ assetId: this.nativeAssetId });
+      } else {
+        this.nativePlaybackMode = 'loop';
+        await NativeAudio.loop({ assetId: this.nativeAssetId });
+      }
     } catch (error) {
       this.isPlaying = false;
       console.error('Native audio playback failed', error);
@@ -471,7 +671,37 @@ export class TinnitusTherapyService {
       rightData[i] = monoData[i] * rightGain;
     }
 
+    this.normalizeNativeLoopAmplitude(leftData, rightData);
+
     return this.encodeStereoFloatToWavBase64(leftData, rightData);
+  }
+
+  private normalizeNativeLoopAmplitude(
+    leftData: Float32Array,
+    rightData: Float32Array,
+  ): void {
+    let maxAbs = 0;
+
+    for (let i = 0; i < leftData.length; i += 1) {
+      maxAbs = Math.max(maxAbs, Math.abs(leftData[i]), Math.abs(rightData[i]));
+    }
+
+    if (maxAbs <= 0) {
+      return;
+    }
+
+    const boost = Math.min(
+      this.nativeLoopMaxBoost,
+      this.nativeLoopTargetPeak / maxAbs,
+    );
+    if (boost <= 1.05) {
+      return;
+    }
+
+    for (let i = 0; i < leftData.length; i += 1) {
+      leftData[i] *= boost;
+      rightData[i] *= boost;
+    }
   }
 
   private encodeStereoFloatToWavBase64(
@@ -784,7 +1014,30 @@ export class TinnitusTherapyService {
     const buffer = this.generateStimulus();
     const source = this.audioContext.createBufferSource();
     source.buffer = buffer;
+    source.onended = () => {
+      this.scheduledSources.delete(source);
+      source.disconnect();
+    };
     source.connect(this.masterGain);
     source.start(startTime);
+    this.scheduledSources.add(source);
+  }
+
+  private cancelScheduledSources(): void {
+    if (!this.audioContext || this.scheduledSources.size === 0) {
+      return;
+    }
+
+    const stopAt = this.audioContext.currentTime;
+    for (const source of this.scheduledSources) {
+      try {
+        source.stop(stopAt);
+      } catch {
+        // Ignore if source already ended.
+      }
+      source.disconnect();
+    }
+
+    this.scheduledSources.clear();
   }
 }
