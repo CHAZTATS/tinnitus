@@ -1,10 +1,23 @@
 import { Injectable } from '@angular/core';
 import { NativeAudio } from '@capacitor-community/native-audio';
-import { Capacitor } from '@capacitor/core';
+import { Capacitor, registerPlugin } from '@capacitor/core';
 import { Device } from '@capacitor/device';
 import { Directory, Filesystem } from '@capacitor/filesystem';
 
 export type ModulationType = 'amp' | 'phase';
+
+type ForegroundAudioPlugin = {
+  startPlayback: (options: {
+    assetPath: string;
+    volume: number;
+    pan: number;
+  }) => Promise<void>;
+  updateLevels: (options: { volume: number; pan: number }) => Promise<void>;
+  stopPlayback: () => Promise<void>;
+};
+
+const ForegroundAudio =
+  registerPlugin<ForegroundAudioPlugin>('ForegroundAudio');
 
 @Injectable({
   providedIn: 'root',
@@ -26,7 +39,7 @@ export class TinnitusTherapyService {
   private nativeAssetFileName: string | null = null;
   private nativeAssetLoaded = false;
   private nativeAssetSignature: string | null = null;
-  private nativePlaybackMode: 'loop' | 'play-retrigger' = 'loop';
+  private nativePlaybackMode: 'loop' | 'service-loop' = 'loop';
   private nativePreviewLoaded = false;
   private nativePreviewSerial = 0;
   private nativeInitPromise: Promise<void> | null = null;
@@ -125,7 +138,7 @@ export class TinnitusTherapyService {
     modulationType: ModulationType;
     outputVolume: number;
     outputPan: number;
-    nativePlaybackMode: 'loop' | 'play-retrigger';
+    nativePlaybackMode: 'loop' | 'service-loop';
   } | null {
     if (!this.audioContext) {
       return null;
@@ -171,7 +184,13 @@ export class TinnitusTherapyService {
   public setVolume(value: number): void {
     this.volume = value;
 
-    if (this.useNativeAudio && this.nativeAssetLoaded) {
+    if (
+      this.useNativeAudio &&
+      this.isPlaying &&
+      Capacitor.getPlatform() === 'android'
+    ) {
+      void this.updateAndroidForegroundAudioLevels();
+    } else if (this.useNativeAudio && this.nativeAssetLoaded) {
       void NativeAudio.setVolume({
         assetId: this.nativeAssetId,
         volume: this.getNativeVolume(value),
@@ -186,7 +205,13 @@ export class TinnitusTherapyService {
   public setPan(value: number): void {
     this.pan = value;
 
-    if (this.useNativeAudio && this.isPlaying) {
+    if (
+      this.useNativeAudio &&
+      this.isPlaying &&
+      Capacitor.getPlatform() === 'android'
+    ) {
+      void this.updateAndroidForegroundAudioLevels();
+    } else if (this.useNativeAudio && this.isPlaying) {
       this.scheduleNativePanRefresh();
     }
 
@@ -518,19 +543,24 @@ export class TinnitusTherapyService {
 
       await this.ensureNativeLoopAsset(forceRebuild);
 
+      if (Capacitor.getPlatform() === 'android') {
+        const fileUri = await Filesystem.getUri({
+          path: this.nativeCacheFileName,
+          directory: Directory.Cache,
+        });
+
+        this.nativePlaybackMode = 'service-loop';
+        await this.startAndroidForegroundAudioPlayback(fileUri.uri);
+        return;
+      }
+
       await NativeAudio.setVolume({
         assetId: this.nativeAssetId,
         volume: this.getNativeVolume(this.volume),
       });
 
-      if (Capacitor.getPlatform() === 'android') {
-        this.nativePlaybackMode = 'loop';
-        await NativeAudio.play({ assetId: this.nativeAssetId });
-        await NativeAudio.loop({ assetId: this.nativeAssetId });
-      } else {
-        this.nativePlaybackMode = 'loop';
-        await NativeAudio.loop({ assetId: this.nativeAssetId });
-      }
+      this.nativePlaybackMode = 'loop';
+      await NativeAudio.loop({ assetId: this.nativeAssetId });
     } catch (error) {
       this.isPlaying = false;
       console.error('Native audio playback failed', error);
@@ -567,12 +597,14 @@ export class TinnitusTherapyService {
       directory: Directory.Cache,
     });
 
-    await NativeAudio.preload({
-      assetId: this.nativeAssetId,
-      assetPath: fileUri.uri,
-      audioChannelNum: 1,
-      isUrl: true,
-    });
+    if (Capacitor.getPlatform() !== 'android') {
+      await NativeAudio.preload({
+        assetId: this.nativeAssetId,
+        assetPath: fileUri.uri,
+        audioChannelNum: 1,
+        isUrl: true,
+      });
+    }
 
     this.nativeAssetLoaded = true;
     this.nativeAssetFileName = this.nativeCacheFileName;
@@ -580,6 +612,29 @@ export class TinnitusTherapyService {
   }
 
   private async stopNativeLoopPlayback(unloadAsset: boolean): Promise<void> {
+    if (Capacitor.getPlatform() === 'android') {
+      await this.stopAndroidForegroundAudioPlayback();
+
+      if (unloadAsset && this.nativeAssetFileName) {
+        try {
+          await Filesystem.deleteFile({
+            path: this.nativeAssetFileName,
+            directory: Directory.Cache,
+          });
+        } catch {
+          // Ignore missing-file cleanup errors.
+        }
+      }
+
+      if (unloadAsset) {
+        this.nativeAssetLoaded = false;
+        this.nativeAssetFileName = null;
+        this.nativeAssetSignature = null;
+      }
+
+      return;
+    }
+
     try {
       await NativeAudio.stop({ assetId: this.nativeAssetId });
 
@@ -615,6 +670,39 @@ export class TinnitusTherapyService {
       this.modType,
       Math.round(this.pan * 1000) / 1000,
     ].join(':');
+  }
+
+  private async startAndroidForegroundAudioPlayback(
+    assetPath: string,
+  ): Promise<void> {
+    try {
+      await ForegroundAudio.startPlayback({
+        assetPath,
+        volume: this.getNativeVolume(this.volume),
+        pan: this.pan,
+      });
+    } catch {
+      // Ignore service startup failures and continue playback attempt.
+    }
+  }
+
+  private async updateAndroidForegroundAudioLevels(): Promise<void> {
+    try {
+      await ForegroundAudio.updateLevels({
+        volume: this.getNativeVolume(this.volume),
+        pan: this.pan,
+      });
+    } catch {
+      // Ignore service level update failures.
+    }
+  }
+
+  private async stopAndroidForegroundAudioPlayback(): Promise<void> {
+    try {
+      await ForegroundAudio.stopPlayback();
+    } catch {
+      // Ignore service shutdown failures.
+    }
   }
 
   private scheduleNativePanRefresh(): void {
