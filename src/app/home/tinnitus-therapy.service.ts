@@ -81,6 +81,10 @@ export class TinnitusTherapyService {
     return this.useNativeAudio;
   }
 
+  private get isAndroidPlatform(): boolean {
+    return Capacitor.getPlatform() === 'android';
+  }
+
   public constructor() {
     this.nativeBackendProbe = this.detectNativeAudioBackend();
 
@@ -184,11 +188,7 @@ export class TinnitusTherapyService {
   public setVolume(value: number): void {
     this.volume = value;
 
-    if (
-      this.useNativeAudio &&
-      this.isPlaying &&
-      Capacitor.getPlatform() === 'android'
-    ) {
+    if (this.useNativeAudio && this.isPlaying && this.isAndroidPlatform) {
       void this.updateAndroidForegroundAudioLevels();
     } else if (this.useNativeAudio && this.nativeAssetLoaded) {
       void NativeAudio.setVolume({
@@ -205,11 +205,7 @@ export class TinnitusTherapyService {
   public setPan(value: number): void {
     this.pan = value;
 
-    if (
-      this.useNativeAudio &&
-      this.isPlaying &&
-      Capacitor.getPlatform() === 'android'
-    ) {
+    if (this.useNativeAudio && this.isPlaying && this.isAndroidPlatform) {
       void this.updateAndroidForegroundAudioLevels();
     } else if (this.useNativeAudio && this.isPlaying) {
       this.scheduleNativePanRefresh();
@@ -376,7 +372,7 @@ export class TinnitusTherapyService {
       return;
     }
 
-    if (Capacitor.getPlatform() === 'android') {
+    if (this.isAndroidPlatform) {
       this.useNativeAudio = true;
       return;
     }
@@ -543,7 +539,7 @@ export class TinnitusTherapyService {
 
       await this.ensureNativeLoopAsset(forceRebuild);
 
-      if (Capacitor.getPlatform() === 'android') {
+      if (this.isAndroidPlatform) {
         const fileUri = await Filesystem.getUri({
           path: this.nativeCacheFileName,
           directory: Directory.Cache,
@@ -592,12 +588,12 @@ export class TinnitusTherapyService {
       directory: Directory.Cache,
     });
 
-    const fileUri = await Filesystem.getUri({
-      path: this.nativeCacheFileName,
-      directory: Directory.Cache,
-    });
+    if (!this.isAndroidPlatform) {
+      const fileUri = await Filesystem.getUri({
+        path: this.nativeCacheFileName,
+        directory: Directory.Cache,
+      });
 
-    if (Capacitor.getPlatform() !== 'android') {
       await NativeAudio.preload({
         assetId: this.nativeAssetId,
         assetPath: fileUri.uri,
@@ -612,7 +608,7 @@ export class TinnitusTherapyService {
   }
 
   private async stopNativeLoopPlayback(unloadAsset: boolean): Promise<void> {
-    if (Capacitor.getPlatform() === 'android') {
+    if (this.isAndroidPlatform) {
       await this.stopAndroidForegroundAudioPlayback();
 
       if (unloadAsset && this.nativeAssetFileName) {
